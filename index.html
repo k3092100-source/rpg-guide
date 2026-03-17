@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《要拚實況RPG》官方指南 - 萌萌吃吃</title>
+    <style>
+        :root {
+            --gold: #ffd700;
+            --bg-dark: #0a0a0a;
+            --panel-bg: rgba(20, 20, 20, 0.9);
+            --neon-blue: #00d4ff;
+            --neon-pink: #ff00ff;
+        }
+
+        body {
+            margin: 0; padding: 0;
+            background-color: var(--bg-dark);
+            font-family: "Microsoft JhengHei", sans-serif;
+            color: #eee;
+            line-height: 1.7;
+            background-image: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%);
+        }
+
+        .container {
+            max-width: 950px; margin: 40px auto; padding: 50px;
+            background: var(--panel-bg);
+            border: 2px solid #333; border-radius: 20px;
+            box-shadow: 0 0 40px rgba(0,0,0,0.8), inset 0 0 15px rgba(255,215,0,0.1);
+            backdrop-filter: blur(10px);
+            animation: floatPage 6s ease-in-out infinite;
+        }
+
+        .header-info { text-align: center; color: #777; font-size: 0.9em; letter-spacing: 1px; margin-bottom: 10px; }
+
+        h1 {
+            text-align: center; color: var(--gold); font-size: 3.5em;
+            text-shadow: 0 0 15px rgba(255,215,0,0.7);
+            margin-bottom: 5px; animation: neonPulse 2s infinite alternate;
+        }
+
+        h2 {
+            border-bottom: 2px solid var(--gold); padding-bottom: 12px;
+            margin-top: 50px; color: #fff; font-size: 2em;
+            display: flex; align-items: center;
+        }
+        h2::before { content: '✨'; margin-right: 15px; color: var(--gold); }
+
+        .highlight { color: var(--gold); font-weight: bold; text-shadow: 0 0 5px rgba(255,215,0,0.5); }
+        .pink-light { color: var(--neon-pink); font-weight: bold; }
+
+        .job-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 30px; margin-top: 25px; }
+        .job-box {
+            background: rgba(255, 255, 255, 0.03); padding: 30px; border-radius: 12px;
+            border: 1px solid #333; border-left: 6px solid #ccc;
+            transition: all 0.3s ease;
+        }
+        .job-box:hover { transform: translateY(-8px); background: rgba(255, 255, 255, 0.06); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+
+        .warrior { border-left-color: #ff4d4d; }
+        .archer { border-left-color: #4dff4d; }
+        .assassin { border-left-color: #a64dff; }
+        .merchant { border-left-color: var(--gold); }
+
+        .job-title { font-size: 1.8em; font-weight: bold; color: #fff; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+        .job-motto { font-style: italic; color: #aaa; font-size: 0.9em; margin-bottom: 15px; }
+        
+        .second-job {
+            color: var(--neon-blue); border-top: 1px dashed rgba(0,212,255,0.3);
+            margin-top: 15px; padding-top: 15px; font-size: 1em;
+        }
+
+        .rule-box { background: rgba(255, 255, 255, 0.05); border: 1px solid #444; padding: 25px; border-radius: 12px; margin-top: 25px; }
+        .cmd-box { background: #151515; padding: 25px; border-radius: 10px; font-family: monospace; color: #00ff00; border: 1px solid #333; line-height: 1.8; }
+
+        .footer { text-align: center; margin-top: 60px; color: #666; font-size: 0.85em; border-top: 1px solid #333; padding-top: 20px; line-height: 1.8; }
+
+        @keyframes floatPage { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes neonPulse { 0% { text-shadow: 0 0 10px rgba(255,215,0,0.7); } 100% { text-shadow: 0 0 20px rgba(255,215,0,0.9); } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-info">◤ 刪檔封測 V0 版 ◢ &nbsp; | &nbsp; 製作人：萌萌吃吃</div>
+
+        <h1>🏆 《要拚實況RPG》</h1>
+        <div style="text-align: center; color: #ff00ff; font-size: 1.3em; margin-bottom: 40px; font-weight: bold;">～ 年度總榜前三名送大獎，誰能問鼎最強勇者？ ～</div>
+
+        <h2>🌟 勇者的終極大計</h2>
+        <div class="rule-box">
+            <p>這不是普通的掛網，這是 <span class="pink-light">年度霸權爭奪戰</span>！</p>
+            <p>打字累積 XP 即代表妳的年度貢獻度。每年 <span class="highlight">12/31 結算總榜前三名</span>，萌萌吃吃會送出 <span class="highlight">實體驚喜大獎</span>。總之給我拚起來！</p>
+        </div>
+
+        <h2>👹 萬血魔王：掛機也能領？</h2>
+        <div class="rule-box">
+            <ul>
+                <li><span class="highlight">全服共享紅包：</span> 魔王被擊殺時，只要妳曾發過話，掛機也能領到 <span class="highlight">50 XP</span> (商人紅包更大)！</li>
+                <li><span class="highlight">尾刀狗萬歲：</span> 給予魔王最後一擊的勇者，額外再領 <span class="highlight">100 XP</span>！</li>
+                <li><span class="highlight">隨機抽獎：</span> 系統會從戰鬥參與者中 <span class="pink-light">隨機抽一位</span> 獲得永久稀有稱號！</li>
+            </ul>
+        </div>
+
+        <h2>🎭 轉職選哪系？(Lv.15 開放)</h2>
+        <div class="job-grid">
+            <div class="job-box warrior">
+                <div class="job-title">⚔️ 戰士</div>
+                <div class="job-motto">「穩定輸出，殘血就是我的回合！」</div>
+                <div><b>一轉優勢：</b> 基礎傷害固定為 <span class="highlight">6</span>。且 BOSS 殘血 (<10%) 時傷害額外 <span class="highlight">+1</span>。輸出最穩，最適合拚尾刀！</div>
+                <div class="second-job">
+                    [二轉 Lv.50] 狂戰士：基礎傷害提升至 <span class="highlight">12</span>，殘血加成噴到 <span class="highlight">+3</span>。
+                </div>
+            </div>
+            
+            <div class="job-box archer">
+                <div class="job-title">🏹 弓箭手</div>
+                <div class="job-motto">「疊滿的那一刻，我連自己都怕。」</div>
+                <div><b>一轉優勢：</b> 傷害 <span class="highlight">2 → 22</span>。每分鐘疊2層，最高10層。適合魔王血厚時刷爆數據！</div>
+                <div class="second-job">
+                    [二轉 Lv.50] 疾風神射手：極限傷害衝到 <span class="highlight">44</span>！
+                </div>
+            </div>
+
+            <div class="job-box assassin">
+                <div class="job-title">💀 刺客</div>
+                <div class="job-motto">「不想熱機？那就賭一刀入魂！」</div>
+                <div><b>一轉優勢：</b> 基礎傷害 2。但有 <span class="highlight">10%</span> 機率直接噴出 <span class="highlight">40 爆擊傷害</span>，歐皇專屬！</div>
+                <div class="second-job">
+                    [二轉 Lv.50] 影之殺手：爆率 15%、爆傷直接噴 <span class="highlight">100</span>！
+                </div>
+            </div>
+
+            <div class="job-box merchant">
+                <div class="job-title">💰 商人</div>
+                <div class="job-motto">「你們努力打王，我負責理財領錢。」</div>
+                <div><b>一轉優勢：</b> 基礎傷害 1。但全服共享紅包翻 <span class="highlight">4 倍 (200 XP)</span>！</div>
+                <div class="second-job">
+                    [二轉 Lv.50] 大亨：共享紅包極致 <span class="highlight">10 倍 (500 XP)</span>！
+                </div>
+            </div>
+        </div>
+
+        <h2>🔥 萌萌吃吃工商支援</h2>
+        <div class="rule-box">
+            <p>工商開啟時，全服進入 <span class="pink-light">5 倍燃燒模式</span> (無魔王，全職業平等)！</p>
+            <p>每句支持的話直接拿 <span class="highlight">10 XP</span>。衝榜必爭之地！</p>
+        </div>
+
+        <h2>⌨️ 勇者必備指令</h2>
+        <div class="cmd-box">
+            !RPG - 看看你角色詳細資訊 | !職業選單 - 呼叫官網說明<br>
+            !轉職 [職業] - Lv.15 以上解鎖 | !我的稱號 - 炫耀歐皇勳章
+        </div>
+
+        <div class="footer">
+            ◤ 刪檔封測 V0 版 ◢ &nbsp; | &nbsp; <span class="highlight">5 月正式服上線</span> &nbsp; | &nbsp; 製作人：萌萌吃吃<br>
+            * 封測期間數值將視魔王擊殺速度進行平衡調整，最終解釋權歸萌萌吃吃所有！ *
+        </div>
+    </div>
+</body>
+</html>
