@@ -151,7 +151,41 @@
             !RPG - 看看你角色詳細資訊 | !職業選單 - 呼叫官網說明<br>
             !轉職 [職業] - Lv.15 以上解鎖 | !我的稱號 - 炫耀歐皇勳章
         </div>
+<h2>🏆 年度霸權即時榜 (Top 10)</h2>
+<div class="rule-box" style="background: rgba(0,0,0,0.3);">
+    <div id="leaderboard-loading">正在召喚勇者排名...</div>
+    <table id="rank-table" style="width:100%; display:none; border-collapse: collapse;">
+        <thead>
+            <tr style="color:var(--gold); border-bottom: 2px solid #444;">
+                <th style="padding:10px; text-align:left;">排名</th>
+                <th style="padding:10px; text-align:left;">玩家</th>
+                <th style="padding:10px; text-align:right;">經驗值 (XP)</th>
+            </tr>
+        </thead>
+        <tbody id="leaderboard-body">
+            </tbody>
+    </table>
+</div>
 
+<script>
+    // 讀取 C# 上傳的 rank.json
+    fetch('rank.json')
+    .then(response => response.json())
+    .then(data => {
+        const body = document.getElementById('leaderboard-body');
+        document.getElementById('leaderboard-loading').style.display = 'none';
+        document.getElementById('rank-table').style.display = 'table';
+        data.forEach((user, index) => {
+            let trophy = index === 0 ? '🥇 ' : index === 1 ? '🥈 ' : index === 2 ? '🥉 ' : (index + 1);
+            body.innerHTML += `
+                <tr style="border-bottom: 1px solid #333;">
+                    <td style="padding:10px;">${trophy}</td>
+                    <td style="padding:10px; color:white; font-weight:bold;">${user.name}</td>
+                    <td style="padding:10px; text-align:right; color:var(--gold);">${user.xp.toLocaleString()}</td>
+                </tr>`;
+        });
+    });
+</script>
         <div class="footer">
             ◤ 刪檔封測 V0 版 ◢ &nbsp; | &nbsp; <span class="highlight">5 月正式服上線</span> &nbsp; | &nbsp; 製作人：萌萌吃吃<br>
             * 封測期間數值將視魔王擊殺速度進行平衡調整，最終解釋權歸萌萌吃吃所有！ *
