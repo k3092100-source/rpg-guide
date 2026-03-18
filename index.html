@@ -168,7 +168,7 @@
 </div>
 
 <script>
-  // 改成讀取雲端房號的資料
+    // 讀取雲端房號的資料
     fetch('https://jsonblob.com/api/jsonBlob/019d0240-2fe6-7d83-b3e1-fd9c71b0d2c0')
     .then(response => response.json())
     .then(data => {
@@ -193,9 +193,8 @@
         // 如果網路卡卡，至少會顯示錯誤訊息，不會一直轉圈圈
         document.getElementById('leaderboard-loading').innerText = '榜單連線中斷，請稍後再試！';
     });
-        });
-    });
 </script>
+
         <div class="footer">
             ◤ 刪檔封測 V0 版 ◢ &nbsp; | &nbsp; <span class="highlight">5 月正式服上線</span> &nbsp; | &nbsp; 製作人：萌萌吃吃<br>
             * 封測期間數值將視魔王擊殺速度進行平衡調整，最終解釋權歸萌萌吃吃所有！ *
