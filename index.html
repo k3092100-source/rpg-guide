@@ -73,6 +73,12 @@
         .rule-box { background: rgba(255, 255, 255, 0.05); border: 1px solid #444; padding: 25px; border-radius: 12px; margin-top: 25px; }
         .cmd-box { background: #151515; padding: 25px; border-radius: 10px; font-family: monospace; color: #00ff00; border: 1px solid #333; line-height: 1.8; }
 
+        .rank-table { width:100%; border-collapse: collapse; margin-top: 15px; }
+        .rank-table thead tr { color: var(--gold); border-bottom: 2px solid #444; text-align: left; }
+        .rank-table th, .rank-table td { padding: 15px 10px; }
+        .rank-table tbody tr { border-bottom: 1px solid #333; transition: background 0.2s; }
+        .rank-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+
         .footer { text-align: center; margin-top: 60px; color: #666; font-size: 0.85em; border-top: 1px solid #333; padding-top: 20px; line-height: 1.8; }
 
         @keyframes floatPage { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
@@ -95,7 +101,7 @@
         <h2>👹 萬血魔王：掛機也能領？</h2>
         <div class="rule-box">
             <ul>
-                <li><span class="highlight">全服共享紅包：</span> 魔王被擊殺時，只要妳曾發過話，掛機也能領到 <span class="highlight">50 XP</span> (商人紅包更大)！</li>
+                <li><span class="highlight">全服共享紅包：</span> 魔王被擊殺時，只要妳曾發過話，掛機也能領到 <span class="highlight">50 XP</span> (商人/大亨紅包更大)！</li>
                 <li><span class="highlight">尾刀狗萬歲：</span> 給予魔王最後一擊的勇者，額外再領 <span class="highlight">100 XP</span>！</li>
                 <li><span class="highlight">隨機抽獎：</span> 系統會從戰鬥參與者中 <span class="pink-light">隨機抽一位</span> 獲得永久稀有稱號！</li>
             </ul>
@@ -106,7 +112,7 @@
             <div class="job-box warrior">
                 <div class="job-title">⚔️ 戰士</div>
                 <div class="job-motto">「穩定輸出，殘血就是我的回合！」</div>
-                <div><b>一轉優勢：</b> 基礎傷害固定為 <span class="highlight">6</span>。且 BOSS 殘血 (<10%) 時傷害額外 <span class="highlight">+1</span>。輸出最穩，最適合拚尾刀！</div>
+                <div><b>一轉優勢：</b> 基礎傷害固定為 <span class="highlight">6</span>。且 BOSS 殘血 (&lt;10%) 時傷害額外 <span class="highlight">+1</span>。輸出最穩，最適合拚尾刀！</div>
                 <div class="second-job">
                     [二轉 Lv.50] 狂戰士：基礎傷害提升至 <span class="highlight">12</span>，殘血加成噴到 <span class="highlight">+3</span>。
                 </div>
@@ -142,7 +148,7 @@
 
         <h2>🔥 萌萌吃吃工商支援</h2>
         <div class="rule-box">
-            <p>工商開啟時，全服進入 <span class="pink-light">5 倍燃燒模式</span> (無魔王，全職業平等)！</p>
+            <p>工商開啟時，全服進入 <span class="pink-light">10 倍燃燒模式</span> (無魔王，所有人平等)！</p>
             <p>每句支持的話直接拿 <span class="highlight">10 XP</span>。衝榜必爭之地！</p>
         </div>
 
@@ -151,52 +157,73 @@
             !RPG - 看看你角色詳細資訊 | !職業選單 - 呼叫官網說明<br>
             !轉職 [職業] - Lv.15 以上解鎖 | !我的稱號 - 炫耀歐皇勳章
         </div>
-<h2>🏆 年度霸權即時榜 (Top 10)</h2>
-<div class="rule-box" style="background: rgba(0,0,0,0.3);">
-    <div id="leaderboard-loading">正在召喚勇者排名...</div>
-    <table id="rank-table" style="width:100%; display:none; border-collapse: collapse;">
-        <thead>
-            <tr style="color:var(--gold); border-bottom: 2px solid #444;">
-                <th style="padding:10px; text-align:left;">排名</th>
-                <th style="padding:10px; text-align:left;">玩家</th>
-                <th style="padding:10px; text-align:right;">經驗值 (XP)</th>
-            </tr>
-        </thead>
-        <tbody id="leaderboard-body">
-            </tbody>
-    </table>
-</div>
 
-<script>
-  // 讀取 MyJSON 旅館的資料
-    fetch('https://api.myjson.online/v1/records/1c0dff27-4979-4ae2-9724-5256a690bb62')
-    .then(response => response.json())
-    .then(res => {
-        // 重要：這家旅館的資料放在 res.data 裡面
-        const leaderboardData = res.data; 
-        const body = document.getElementById('leaderboard-body');
-        
-        document.getElementById('leaderboard-loading').style.display = 'none';
-        document.getElementById('rank-table').style.display = 'table';
-        
-        // 先清空畫面
-        body.innerHTML = ''; 
-        
-        leaderboardData.forEach((user, index) => {
-            let trophy = index === 0 ? '🥇 ' : index === 1 ? '🥈 ' : index === 2 ? '🥉 ' : (index + 1);
-            body.innerHTML += `
-                <tr style="border-bottom: 1px solid #333;">
-                    <td style="padding:10px;">${trophy}</td>
-                    <td style="padding:10px; color:white; font-weight:bold;">${user.name}</td>
-                    <td style="padding:10px; text-align:right; color:var(--gold);">${user.xp.toLocaleString()}</td>
-                </tr>`;
-        });
-    })
-    .catch(error => {
-        console.error('抓取失敗:', error);
-        document.getElementById('leaderboard-loading').innerText = '榜單召喚失敗，請重新整理！';
-    });
-</script>
+        <h2>🏆 年度霸權即時榜 (Top 10)</h2>
+        <div class="rule-box" style="background: rgba(0,0,0,0.3);">
+            <div id="leaderboard-loading">正在召喚勇者排名...</div>
+            <table id="rank-table" class="rank-table" style="display:none;">
+                <thead>
+                    <tr>
+                        <th>排名</th>
+                        <th>勇者 (職業/等級)</th>
+                        <th style="text-align:right;">貢獻度 (XP)</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboard-body">
+                    </tbody>
+            </table>
+        </div>
+
+        <script>
+            // 職業圖標對照表 (一轉 & 二轉)
+            const jobIcons = {
+                "戰士": "⚔️", "狂戰士": "🔥",
+                "弓箭手": "🏹", "疾風神射手": "🍃",
+                "刺客": "💀", "影之殺手": "🌚",
+                "商人": "💰", "大亨": "💎",
+                "冒險者": "🛡️"
+            };
+
+            // 讀取 MyJSON 旅館的資料
+            fetch('https://api.myjson.online/v1/records/1c0dff27-4979-4ae2-9724-5256a690bb62')
+            .then(response => response.json())
+            .then(res => {
+                const leaderboardData = res.data; 
+                const body = document.getElementById('leaderboard-body');
+                
+                document.getElementById('leaderboard-loading').style.display = 'none';
+                document.getElementById('rank-table').style.display = 'table';
+                
+                body.innerHTML = ''; 
+                
+                leaderboardData.forEach((user, index) => {
+                    let trophy = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : (index + 1);
+                    
+                    // 抓取職業圖標 (沒轉職預設冒險者)
+                    let icon = jobIcons[user.job] || "🛡️";
+                    
+                    // 抓取等級 (沒資料預設 Lv.1)
+                    let userLvl = user.lvl || 1;
+
+                    body.innerHTML += `
+                        <tr>
+                            <td style="font-size:1.2em; text-align:center;">${trophy}</td>
+                            <td style="color:white;">
+                                <span title="${user.job}" style="margin-right:10px; font-size:1.1em;">${icon}</span>
+                                <span style="color:var(--gold); font-weight:bold; margin-right:8px;">Lv.${userLvl}</span>
+                                <span style="font-weight:bold;">${user.name}</span>
+                            </td>
+                            <td style="text-align:right; color:var(--gold); font-weight:bold;">
+                                ${user.xp.toLocaleString()} <span style="font-size:0.8em; color:#888;">XP</span>
+                            </td>
+                        </tr>`;
+                });
+            })
+            .catch(error => {
+                console.error('抓取失敗:', error);
+                document.getElementById('leaderboard-loading').innerText = '榜單召喚失敗，請重新整理！';
+            });
+        </script>
 
         <div class="footer">
             ◤ 刪檔封測 V0 版 ◢ &nbsp; | &nbsp; <span class="highlight">5 月正式服上線</span> &nbsp; | &nbsp; 製作人：萌萌吃吃<br>
