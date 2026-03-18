@@ -168,13 +168,17 @@
 </div>
 
 <script>
-    // 讀取 C# 上傳的 rank.json
-    fetch('rank.json')
+  // 改成讀取雲端房號的資料
+    fetch('https://jsonblob.com/api/jsonBlob/019d0240-2fe6-7d83-b3e1-fd9c71b0d2c0')
     .then(response => response.json())
     .then(data => {
         const body = document.getElementById('leaderboard-body');
         document.getElementById('leaderboard-loading').style.display = 'none';
         document.getElementById('rank-table').style.display = 'table';
+        
+        // 先清空畫面，確保不會重複疊加
+        body.innerHTML = ''; 
+        
         data.forEach((user, index) => {
             let trophy = index === 0 ? '🥇 ' : index === 1 ? '🥈 ' : index === 2 ? '🥉 ' : (index + 1);
             body.innerHTML += `
@@ -183,6 +187,12 @@
                     <td style="padding:10px; color:white; font-weight:bold;">${user.name}</td>
                     <td style="padding:10px; text-align:right; color:var(--gold);">${user.xp.toLocaleString()}</td>
                 </tr>`;
+        });
+    })
+    .catch(error => {
+        // 如果網路卡卡，至少會顯示錯誤訊息，不會一直轉圈圈
+        document.getElementById('leaderboard-loading').innerText = '榜單連線中斷，請稍後再試！';
+    });
         });
     });
 </script>
