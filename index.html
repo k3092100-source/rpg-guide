@@ -169,14 +169,13 @@
 
 <script>
     // 讀取雲端房號的資料
-    fetch('https://myjson.online/api/data/831354f6-6841-4120-92ff-f9109d65eafb')
+    fetch('https://api.myjson.online/v1/records/1c0dff27-4979-4ae2-9724-5256a690bb62')
     .then(response => response.json())
-    .then(data => {
+    .then(res => {
+        const data = res.data; // MyJSON 會多包一層 data
         const body = document.getElementById('leaderboard-body');
         document.getElementById('leaderboard-loading').style.display = 'none';
         document.getElementById('rank-table').style.display = 'table';
-        
-        // 先清空畫面，確保不會重複疊加
         body.innerHTML = ''; 
         
         data.forEach((user, index) => {
