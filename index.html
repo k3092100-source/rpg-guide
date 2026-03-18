@@ -168,17 +168,21 @@
 </div>
 
 <script>
-    // 讀取雲端房號的資料
+  // 讀取 MyJSON 旅館的資料
     fetch('https://api.myjson.online/v1/records/1c0dff27-4979-4ae2-9724-5256a690bb62')
     .then(response => response.json())
     .then(res => {
-        const data = res.data; // MyJSON 會多包一層 data
+        // 重要：這家旅館的資料放在 res.data 裡面
+        const leaderboardData = res.data; 
         const body = document.getElementById('leaderboard-body');
+        
         document.getElementById('leaderboard-loading').style.display = 'none';
         document.getElementById('rank-table').style.display = 'table';
+        
+        // 先清空畫面
         body.innerHTML = ''; 
         
-        data.forEach((user, index) => {
+        leaderboardData.forEach((user, index) => {
             let trophy = index === 0 ? '🥇 ' : index === 1 ? '🥈 ' : index === 2 ? '🥉 ' : (index + 1);
             body.innerHTML += `
                 <tr style="border-bottom: 1px solid #333;">
@@ -189,8 +193,8 @@
         });
     })
     .catch(error => {
-        // 如果網路卡卡，至少會顯示錯誤訊息，不會一直轉圈圈
-        document.getElementById('leaderboard-loading').innerText = '榜單連線中斷，請稍後再試！';
+        console.error('抓取失敗:', error);
+        document.getElementById('leaderboard-loading').innerText = '榜單召喚失敗，請重新整理！';
     });
 </script>
 
