@@ -197,27 +197,30 @@
                 body.innerHTML = ''; 
                 
                 leaderboardData.forEach((user, index) => {
-                    let trophy = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : (index + 1);
-                    
-                    // 抓取職業圖標 (沒轉職預設冒險者)
-                    let icon = jobIcons[user.job] || "🛡️";
-                    
-                    // 抓取等級 (沒資料預設 Lv.1)
-                    let userLvl = user.lvl || 1;
+            let trophy = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : (index + 1);
+            
+            // 抓取職業名稱，如果不存在就叫 "冒險者"
+            let userJobName = user.job || "冒險者";
+            
+            // 抓取圖標
+            let icon = jobIcons[userJobName] || "🛡️";
+            
+            // 抓取等級
+            let userLvl = user.lvl || 1;
 
-                    body.innerHTML += `
-        <tr>
-            <td style="font-size:1.2em; text-align:center;">${trophy}</td>
-            <td style="color:white;">
-                <span title="${user.job}" style="margin-right:5px; font-size:1.1em;">${icon}</span>
-                <span style="color:#888; font-size:0.85em; margin-right:5px;">${user.job}</span>
-                <span style="color:var(--gold); font-weight:bold; margin-right:8px;">Lv.${userLvl}</span>
-                <span style="font-weight:bold;">${user.name}</span>
-            </td>
-            <td style="text-align:right; color:var(--gold); font-weight:bold;">
-                ${user.xp.toLocaleString()} <span style="font-size:0.8em; color:#888;">XP</span>
-            </td>
-        </tr>`;
+            body.innerHTML += `
+                <tr>
+                    <td style="font-size:1.2em; text-align:center;">${trophy}</td>
+                    <td style="color:white;">
+                        <span style="margin-right:5px; font-size:1.1em;">${icon}</span>
+                        <span style="color:#888; font-size:0.85em; margin-right:8px;">${userJobName}</span>
+                        <span style="color:var(--gold); font-weight:bold; margin-right:8px;">Lv.${userLvl}</span>
+                        <span style="font-weight:bold;">${user.name}</span>
+                    </td>
+                    <td style="text-align:right; color:var(--gold); font-weight:bold;">
+                        ${user.xp.toLocaleString()} <span style="font-size:0.8em; color:#888;">XP</span>
+                    </td>
+                </tr>`;
                 });
             })
             .catch(error => {
