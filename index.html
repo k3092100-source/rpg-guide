@@ -28,7 +28,7 @@
             border: 2px solid #333; border-radius: 20px;
             box-shadow: 0 0 40px rgba(0,0,0,0.8), inset 0 0 15px rgba(255,215,0,0.1);
             backdrop-filter: blur(10px);
-            /* ❌ 已移除 floatPage 動畫 */
+            /* ❌ 已移除 floatPage 動畫，讓頁面保持穩定 */
         }
 
         .header-info { text-align: center; color: #777; font-size: 0.9em; letter-spacing: 1px; margin-bottom: 10px; }
@@ -47,3 +47,14 @@
         h2::before { content: '✨'; margin-right: 15px; color: var(--gold); }
 
         .highlight { color: var(--gold); font-weight: bold; text-shadow: 0 0 5px rgba(255,215,0,0.5); }
+        .pink-light { color: var(--neon-pink); font-weight: bold; }
+
+        .job-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 30px; margin-top: 25px; }
+        .job-box {
+            background: rgba(255, 255, 255, 0.03); padding: 30px; border-radius: 12px;
+            border: 1px solid #333; border-left: 6px solid #ccc;
+            transition: all 0.3s ease;
+        }
+        
+        /* ❌ 已移除 translateY(-8px)，滑鼠移上去時不會再上下晃動 */
+        .job
