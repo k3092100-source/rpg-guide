@@ -28,7 +28,7 @@
             border: 2px solid #333; border-radius: 20px;
             box-shadow: 0 0 40px rgba(0,0,0,0.8), inset 0 0 15px rgba(255,215,0,0.1);
             backdrop-filter: blur(10px);
-            /* ❌ 已移除 floatPage 動畫，讓頁面保持穩定 */
+            animation: floatPage 6s ease-in-out infinite;
         }
 
         .header-info { text-align: center; color: #777; font-size: 0.9em; letter-spacing: 1px; margin-bottom: 10px; }
@@ -55,6 +55,177 @@
             border: 1px solid #333; border-left: 6px solid #ccc;
             transition: all 0.3s ease;
         }
+        .job-box:hover { transform: translateY(-8px); background: rgba(255, 255, 255, 0.06); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+
+        .warrior { border-left-color: #ff4d4d; }
+        .archer { border-left-color: #4dff4d; }
+        .assassin { border-left-color: #a64dff; }
+        .merchant { border-left-color: var(--gold); }
+
+        .job-title { font-size: 1.8em; font-weight: bold; color: #fff; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+        .job-motto { font-style: italic; color: #aaa; font-size: 0.9em; margin-bottom: 15px; }
         
-        /* ❌ 已移除 translateY(-8px)，滑鼠移上去時不會再上下晃動 */
-        .job
+        .second-job {
+            color: var(--neon-blue); border-top: 1px dashed rgba(0,212,255,0.3);
+            margin-top: 15px; padding-top: 15px; font-size: 1em;
+        }
+
+        .rule-box { background: rgba(255, 255, 255, 0.05); border: 1px solid #444; padding: 25px; border-radius: 12px; margin-top: 25px; }
+        .cmd-box { background: #151515; padding: 25px; border-radius: 10px; font-family: monospace; color: #00ff00; border: 1px solid #333; line-height: 1.8; }
+
+        .rank-table { width:100%; border-collapse: collapse; margin-top: 15px; }
+        .rank-table thead tr { color: var(--gold); border-bottom: 2px solid #444; text-align: left; }
+        .rank-table th, .rank-table td { padding: 15px 10px; }
+        .rank-table tbody tr { border-bottom: 1px solid #333; transition: background 0.2s; }
+        .rank-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+
+        .footer { text-align: center; margin-top: 60px; color: #666; font-size: 0.85em; border-top: 1px solid #333; padding-top: 20px; line-height: 1.8; }
+
+        @keyframes floatPage { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes neonPulse { 0% { text-shadow: 0 0 10px rgba(255,215,0,0.7); } 100% { text-shadow: 0 0 20px rgba(255,215,0,0.9); } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-info">◤ 第一賽季：賽季平衡版 ◢ &nbsp; | &nbsp; 製作人：萌萌吃吃</div>
+
+        <h1>🏆 《要拚實況RPG》</h1>
+        <div style="text-align: center; color: #ff00ff; font-size: 1.3em; margin-bottom: 40px; font-weight: bold;">～ 5月正式開服，12/31 結算年度總榜送驚喜大獎！ ～</div>
+
+        <h2>🌟 第一季營運公告</h2>
+        <div class="rule-box">
+            <p>這不是普通的掛網，這是 <span class="pink-light">年度霸權爭奪戰</span>！</p>
+            <p>本季等級上限為 <span class="highlight">Lv.100</span>。打字獲取 XP 代表妳的貢獻度，萌萌吃吃將於年底送出 <span class="highlight">實體驚喜大獎</span>。總之給我拚起來！</p>
+        </div>
+
+        <h2>👹 萬血魔王：打王不打混</h2>
+        <div class="rule-box">
+            <ul>
+                
+                <li><span class="highlight">全服共享紅包：</span> 魔王倒下後，參與者可獲得 <span class="highlight">200 XP</span> (商人/大亨加成更多)！</li>
+<li><span class="highlight">魔王攻擊：</span> 魔王戰期間隨機攻擊聊天室的人，被隨機攻擊到會<span class="highlight">ban600秒並獲得非洲人稱號</span>!</li>
+                <li><span class="highlight">尾刀霸主：</span> 給予魔王最後一擊的勇者，直接領取 <span class="highlight">500 XP</span>！</li>
+                <li><span class="highlight">超級大賽狗：</span> 0.01% 機率觸發 <span class="pink-light">天選爆擊 100 傷</span> 並獲得永久專屬稱號！</li>
+            </ul>
+        </div>
+
+        <h2>🎭 職業體系 (Lv.15 開放轉職)</h2>
+        <div class="job-grid">
+            <div class="job-box warrior">
+                <div class="job-title">⚔️ 戰士</div>
+                <div class="job-motto">「血量階梯增傷，最後 10 分鐘我就是戰神！」</div>
+                <div><b>一轉優勢：</b> 基礎傷害 <span class="highlight">20</span>。魔王血量每掉 20%，傷害額外 <span class="highlight">+10</span>。殘血時單下可達 60 傷！</div>
+                <div class="second-job">
+                    [二轉 Lv.50] 狂戰士：基礎傷害 <span class="highlight">45</span>，殘血加成每階 <span class="highlight">+15</span>，極限爆發力高達 180！
+                </div>
+            </div>
+            
+            <div class="job-box archer">
+                <div class="job-title">🏹 弓箭手</div>
+                <div class="job-motto">「絕對專注，中斷即地獄。」</div>
+                <div><b>一轉優勢：</b> 基礎 5 傷。每分鐘疊層 +5 (最高 55)。<span class="pink-light">注意：</span>超過 5 分鐘未攻擊，疊層歸零。</div>
+                <div class="second-job">
+                    [二轉 Lv.50] 疾風神射手：基礎 10 傷，疊滿極限衝到 <span class="highlight">110</span>！全職業總傷害最高。
+                </div>
+            </div>
+
+            <div class="job-box assassin">
+                <div class="job-title">💀 刺客</div>
+                <div class="job-motto">「歐皇代名詞，開場就拚一刀入魂！」</div>
+                <div><b>一轉優勢：</b> 基礎傷害 5。具備 <span class="highlight">10%</span> 機率噴出 <span class="highlight">150 爆擊傷害</span>，不需要熱機！</div>
+                <div class="second-job">
+                    [二轉 Lv.50] 影之殺手：爆率 15%、爆傷直接噴 <span class="highlight">300</span>！尾刀機率最大的變數。
+                </div>
+            </div>
+
+            <div class="job-box merchant">
+                <div class="job-title">💰 商人</div>
+                <div class="job-motto">「打王是你們的事，升級是我的事。」</div>
+                <div><b>一轉優勢：</b> 雖然傷害僅 1。但全服共享紅包翻 <span class="highlight">4 倍 (800 XP)</span>！</div>
+                <div class="second-job">
+                    [二轉 Lv.50] 大亨：共享紅包極致 <span class="highlight">10 倍 (2,000 XP)</span>！是邁向滿等的最短捷徑。
+                </div>
+            </div>
+        </div>
+
+        <h2>🔥 萌萌吃吃燃燒模式</h2>
+        <div class="rule-box">
+            <p>工商開啟或特定時段進入 <span class="pink-light">10 倍燃燒模式</span> (所有人平等)！</p>
+            <p>每句聊天文字直接拿 <span class="highlight">100 XP</span> (CD 3分鐘)。衝榜必爭之地！</p>
+        </div>
+
+        <h2>⌨️ 勇者必備指令</h2>
+        <div class="cmd-box">
+            !RPG - 角色狀態看板 | !職業選單 - 官網詳細介紹<br>
+            !轉職 [職業] - Lv.15 解鎖 | !二轉 - Lv.50 覺醒 | !我的稱號 - 炫耀專屬成就
+        </div>
+
+        <h2>🏆 年度霸權即時榜 (Top 10)</h2>
+        <div class="rule-box" style="background: rgba(0,0,0,0.3);">
+            <div id="leaderboard-loading">正在召喚勇者排名...</div>
+            <table id="rank-table" class="rank-table" style="display:none;">
+                <thead>
+                    <tr>
+                        <th>排名</th>
+                        <th>勇者 (職業/等級)</th>
+                        <th style="text-align:right;">貢獻度 (XP)</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboard-body">
+                    </tbody>
+            </table>
+        </div>
+
+        <script>
+            const jobIcons = {
+                "戰士": "⚔️", "狂戰士": "🔥",
+                "弓箭手": "🏹", "疾風神射手": "🍃",
+                "刺客": "💀", "影之殺手": "🌚",
+                "商人": "💰", "大亨": "💎",
+                "冒險者": "🛡️"
+            };
+
+            fetch('https://api.myjson.online/v1/records/1c0dff27-4979-4ae2-9724-5256a690bb62')
+            .then(response => response.json())
+            .then(res => {
+                const leaderboardData = res.data; 
+                const body = document.getElementById('leaderboard-body');
+                
+                document.getElementById('leaderboard-loading').style.display = 'none';
+                document.getElementById('rank-table').style.display = 'table';
+                
+                body.innerHTML = ''; 
+                
+                leaderboardData.forEach((user, index) => {
+                    let trophy = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : (index + 1);
+                    let icon = jobIcons[user.job] || "🛡️";
+                    let userLvl = user.lvl || 1;
+
+                    body.innerHTML += `
+                        <tr>
+                            <td style="font-size:1.2em; text-align:center;">${trophy}</td>
+                            <td style="color:white;">
+                                <span title="${user.job}" style="margin-right:5px; font-size:1.1em;">${icon}</span>
+                                <span style="color:#888; font-size:0.85em; margin-right:5px;">${user.job}</span>
+                                <span style="color:var(--gold); font-weight:bold; margin-right:8px;">Lv.${userLvl}</span>
+                                <span style="font-weight:bold;">${user.name}</span>
+                            </td>
+                            <td style="text-align:right; color:var(--gold); font-weight:bold;">
+                                ${user.xp.toLocaleString()} <span style="font-size:0.8em; color:#888;">XP</span>
+                            </td>
+                        </tr>`;
+                });
+            })
+            .catch(error => {
+                console.error('抓取失敗:', error);
+                document.getElementById('leaderboard-loading').innerText = '榜單召喚失敗，請重新整理！';
+            });
+        </script>
+
+        <div class="footer">
+            ◤ 第一賽季：賽季平衡版 ◢ &nbsp; | &nbsp; <span class="highlight">5 月正式服上線</span> &nbsp; | &nbsp; 製作人：萌萌吃吃<br>
+            * 數值將視魔王擊殺速度隨時微調，最終解釋權歸萌萌吃吃所有！ *
+        </div>
+    </div>
+</body>
+</html>
