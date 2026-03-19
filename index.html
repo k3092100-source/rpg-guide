@@ -20,6 +20,8 @@
             color: #eee;
             line-height: 1.7;
             background-image: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%);
+            /* 確保背景可以捲動 */
+            min-height: 100vh;
         }
 
         .container {
@@ -28,7 +30,7 @@
             border: 2px solid #333; border-radius: 20px;
             box-shadow: 0 0 40px rgba(0,0,0,0.8), inset 0 0 15px rgba(255,215,0,0.1);
             backdrop-filter: blur(10px);
-            /* ✨ 已刪除 floatPage 動畫 */
+            /* ✨ 這裡已經移除了 floatPage 動畫，讓網頁保持穩定 */
         }
 
         .header-info { text-align: center; color: #777; font-size: 0.9em; letter-spacing: 1px; margin-bottom: 10px; }
@@ -81,14 +83,49 @@
 
         .footer { text-align: center; margin-top: 60px; color: #666; font-size: 0.85em; border-top: 1px solid #333; padding-top: 20px; line-height: 1.8; }
 
-        /* ✨ 移除了 floatPage 動畫定義，僅保留標題的脈動效果 */
         @keyframes neonPulse { 0% { text-shadow: 0 0 10px rgba(255,215,0,0.7); } 100% { text-shadow: 0 0 20px rgba(255,215,0,0.9); } }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header-info">◤ 第一賽季：賽季平衡版 ◢ &nbsp; | &nbsp; 製作人：萌萌吃吃</div>
+
         <h1>🏆 《要拚實況RPG》</h1>
+        <div style="text-align: center; color: #ff00ff; font-size: 1.3em; margin-bottom: 40px; font-weight: bold;">～ 5月正式開服，12/31 結算年度總榜送驚喜大獎！ ～</div>
+
+        <h2>🌟 第一季營運公告</h2>
+        <div class="rule-box">
+            <p>這不是普通的掛網，這是 <span class="pink-light">年度霸權爭奪戰</span>！</p>
+            <p>本季等級上限為 <span class="highlight">Lv.100</span>。打字獲取 XP 代表妳的貢獻度，萌萌吃吃將於年底送出 <span class="highlight">實體驚喜大獎</span>。總之給我拚起來！</p>
         </div>
-</body>
-</html>
+
+        <h2>👹 萬血魔王：打王不打混</h2>
+        <div class="rule-box">
+            <ul>
+                <li><span class="highlight">全服共享紅包：</span> 魔王倒下後，參與者可獲得 <span class="highlight">200 XP</span>！</li>
+                <li><span class="highlight">魔王攻擊：</span> 魔王戰期間隨機攻擊，中招者將被 <span class="highlight">禁言並獲得非洲人稱號</span>！</li>
+                <li><span class="highlight">尾刀霸主：</span> 給予魔王最後一擊的勇者，直接領取 <span class="highlight">500 XP</span>！</li>
+                <li><span class="highlight">超級大賽狗：</span> 0.01% 機率觸發 <span class="pink-light">天選爆擊 100 傷</span> 並獲得永久專屬稱號！</li>
+            </ul>
+        </div>
+
+        <h2>🎭 職業體系 (Lv.15 開放轉職)</h2>
+        <div class="job-grid">
+            <div class="job-box warrior">
+                <div class="job-title">⚔️ 戰士</div>
+                <div class="job-motto">「血量階梯增傷，最後 10 分鐘我就是戰神！」</div>
+                <div><b>一轉優勢：</b> 基礎傷害 <span class="highlight">20</span>。魔王血量每掉 20%，傷害額外 <span class="highlight">+10</span>。</div>
+                <div class="second-job">[二轉 Lv.50] 狂戰士：基礎傷害 45，殘血加成每階 +15。</div>
+            </div>
+            
+            <div class="job-box archer">
+                <div class="job-title">🏹 弓箭手</div>
+                <div class="job-motto">「絕對專注，中斷即地獄。」</div>
+                <div><b>一轉優勢：</b> 基礎 5 傷。每 30 秒疊層 +5。超過 5 分鐘未攻擊，疊層歸零。</div>
+                <div class="second-job">[二轉 Lv.50] 疾風神射手：基礎 10 傷，疊滿極限衝到 110！</div>
+            </div>
+
+            <div class="job-box assassin">
+                <div class="job-title">💀 刺客</div>
+                <div class="job-motto">「歐皇代名詞，開場就拚一刀入魂！」</div>
+                <div><b>一轉優勢：</b> 具備
