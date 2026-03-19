@@ -128,4 +128,76 @@
             <div class="job-box assassin">
                 <div class="job-title">💀 刺客</div>
                 <div class="job-motto">「歐皇代名詞，開場就拚一刀入魂！」</div>
-                <div><b>一轉優勢：</b> 具備
+                <div><b>一轉優勢：</b> 具備 <span class="highlight">10%</span> 機率噴出 <span class="highlight">150 爆擊傷害</span>！</div>
+                <div class="second-job">[二轉 Lv.50] 影之殺手：爆率 15%、爆傷直接噴 300！</div>
+            </div>
+
+            <div class="job-box merchant">
+                <div class="job-title">💰 商人</div>
+                <div class="job-motto">「打王是你們的事，升級是我的事。」</div>
+                <div><b>一轉優勢：</b> 全服共享紅包翻 <span class="highlight">4 倍 (800 XP)</span>！</div>
+                <div class="second-job">[二轉 Lv.50] 大亨：共享紅包極致 10 倍 (2,000 XP)！</div>
+            </div>
+        </div>
+
+        <h2>🏆 年度霸權即時榜 (Top 10)</h2>
+        <div class="rule-box" style="background: rgba(0,0,0,0.3);">
+            <div id="leaderboard-loading">正在召喚勇者排名...</div>
+            <table id="rank-table" class="rank-table" style="display:none;">
+                <thead>
+                    <tr>
+                        <th>排名</th>
+                        <th>勇者 (職業/等級)</th>
+                        <th style="text-align:right;">貢獻度 (XP)</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboard-body"></tbody>
+            </table>
+        </div>
+
+        <div class="footer">
+            ◤ 第一賽季：賽季平衡版 ◢ &nbsp; | &nbsp; <span class="highlight">5 月正式服上線</span> &nbsp; | &nbsp; 製作人：萌萌吃吃<br>
+            * 數值將視魔王擊殺速度隨時微調，最終解釋權歸萌萌吃吃所有！ *
+        </div>
+    </div>
+
+    <script>
+        const jobIcons = {
+            "戰士": "⚔️", "狂戰士": "🔥",
+            "弓箭手": "🏹", "疾風神射手": "🍃",
+            "刺客": "💀", "影之殺手": "🌚",
+            "商人": "💰", "大亨": "💎",
+            "冒險者": "🛡️"
+        };
+
+        fetch('https://api.myjson.online/v1/records/1c0dff27-4979-4ae2-9724-5256a690bb62')
+        .then(response => response.json())
+        .then(res => {
+            const leaderboardData = res.data; 
+            const body = document.getElementById('leaderboard-body');
+            document.getElementById('leaderboard-loading').style.display = 'none';
+            document.getElementById('rank-table').style.display = 'table';
+            body.innerHTML = ''; 
+            leaderboardData.slice(0, 10).forEach((user, index) => {
+                let trophy = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : (index + 1);
+                let icon = jobIcons[user.job] || "🛡️";
+                body.innerHTML += `
+                    <tr>
+                        <td style="font-size:1.2em; text-align:center;">${trophy}</td>
+                        <td style="color:white;">
+                            <span style="color:#888; font-size:0.85em; margin-right:5px;">${icon} ${user.job}</span>
+                            <span style="color:var(--gold); font-weight:bold; margin-right:8px;">Lv.${user.lvl || 1}</span>
+                            <span style="font-weight:bold;">${user.name}</span>
+                        </td>
+                        <td style="text-align:right; color:var(--gold); font-weight:bold;">
+                            ${(user.xp || 0).toLocaleString()} <span style="font-size:0.8em; color:#888;">XP</span>
+                        </td>
+                    </tr>`;
+            });
+        })
+        .catch(err => {
+            document.getElementById('leaderboard-loading').innerText = '榜單召喚失敗，請重新整理！';
+        });
+    </script>
+</body>
+</html>
