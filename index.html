@@ -20,6 +20,7 @@
             color: #eee;
             line-height: 1.7;
             background-image: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%);
+            /* 確保背景可以捲動 */
             min-height: 100vh;
         }
 
@@ -71,7 +72,20 @@
         }
 
         .rule-box { background: rgba(255, 255, 255, 0.05); border: 1px solid #444; padding: 25px; border-radius: 12px; margin-top: 25px; }
-        .cmd-box { background: #151515; padding: 25px; border-radius: 10px; font-family: monospace; color: #00ff00; border: 1px solid #333; line-height: 1.8; }
+        
+        /* 指令清單樣式 */
+        .cmd-list { margin-top: 20px; }
+        .cmd-item { 
+            background: rgba(0, 212, 255, 0.05); 
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            padding: 15px; 
+            border-radius: 10px; 
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+        .cmd-name { font-family: monospace; color: #00ff00; font-size: 1.2em; font-weight: bold; margin-bottom: 5px; }
+        .cmd-desc { color: #ccc; font-size: 0.95em; }
 
         .rank-table { width:100%; border-collapse: collapse; margin-top: 15px; }
         .rank-table thead tr { color: var(--gold); border-bottom: 2px solid #444; text-align: left; }
@@ -94,7 +108,39 @@
         <h2>🌟 第一季營運公告(現階段為刪檔封測)</h2>
         <div class="rule-box">
             <p>這不是普通的掛網，這是 <span class="pink-light">年度霸權爭奪戰</span>！</p>
-            <p>本季等級上限為 <span class="highlight">Lv.100</span>。打字皆可獲取XP 代表妳的貢獻度，萌萌吃吃將於年底送出 <span class="highlight">實體驚喜大獎</span>。總之給我拚起來！</p>
+            <p>本季等級上限為 <span class="highlight">Lv.100</span>。打字皆可獲取XP 代表妳的貢獻度，萌萌吃吃將於年底送給前三名 <span class="highlight">實體驚喜大獎</span>。總之給我拚起來！</p>
+        </div>
+
+        <h2>🔥 萌萌吃吃：燃燒加倍時段</h2>
+        <div class="rule-box">
+            <p>於工商直播或特定驚喜時段，將全服開啟 <span class="pink-light">10 倍燃燒模式</span>！</p>
+            <p>燃燒期間每句聊天文字將直接獲得 <span class="highlight">100 XP</span> (冷卻時間 3 分鐘)。這是各位勇者衝刺等級、反超排名、奪取年底大獎的最佳時機！</p>
+        </div>
+
+        <h2>📜 冒險者公會：指令手冊</h2>
+        <div class="rule-box">
+            <div class="cmd-list">
+                <div class="cmd-item">
+                    <div class="cmd-name">!RPG</div>
+                    <div class="cmd-desc">查看個人冒險狀態。包含當前等級、累積 XP 以及目前裝備的稱號與職業。</div>
+                </div>
+                <div class="cmd-item">
+                    <div class="cmd-name">!轉職 [職業名稱]</div>
+                    <div class="cmd-desc">當等級達到 <span class="highlight">Lv.15</span> 時，可輸入此指令進行轉職（例如：!轉職 戰士）。</div>
+                </div>
+                <div class="cmd-item">
+                    <div class="cmd-name">!二轉 [職業名稱]</div>
+                    <div class="cmd-desc">當等級達到 <span class="highlight">Lv.50</span> 時，可輸入此指令進行轉職（例如：!二轉 狂戰士）。</div>
+                </div>
+                <div class="cmd-item">
+                    <div class="cmd-name">!我的稱號</div>
+                    <div class="cmd-desc">列出你目前所擁有的所有稀有稱號。讓你確認哪些永久榮耀已經入袋！</div>
+                </div>
+                <div class="cmd-item">
+                    <div class="cmd-name">!換稱號 [稱號名稱]</div>
+                    <div class="cmd-desc">從你擁有的稱號清單中，挑選一個最帥的掛在名字前面。</div>
+                </div>
+            </div>
         </div>
 
         <h2>👹 萬血魔王：打王不打混</h2>
@@ -123,7 +169,7 @@
             <div class="job-box archer">
                 <div class="job-title">🏹 弓箭手</div>
                 <div class="job-motto">「絕對專注，中斷即地獄。」</div>
-                <div><b>一轉優勢：</b> 基礎 <span class="highlight">5</span> 傷。每 30 秒疊層 <span class="highlight">+5</span>最高可疊每次55傷害。超過 5 分鐘未攻擊，疊層歸零。</div>
+                <div><b>一轉優勢：</b> 基礎 <span class="highlight">5</span> 傷。每 30 秒疊層 <span class="highlight">+5</span>，最高可疊每次 55 傷害。超過 5 分鐘未攻擊，疊層歸零。</div>
                 <div style="margin-top: 10px; color: #4dff4d; font-size: 0.9em;">
                     🛡️ <b>生存 BUFF：</b> 全職最低震飛率 (<span class="highlight">1%</span>) & 最快回場速度 (<span class="highlight">10秒</span>)。
                 </div>
@@ -185,18 +231,14 @@
         };
 
         function loadRankingFromLocal() {
-            // ✨ 移除舊的 script 標籤防止堆積
             const oldScript = document.getElementById('ranking-script-data');
             if (oldScript) oldScript.remove();
 
-            // ✨ 建立新的 script 標籤載入本地 ranking.js
             const s = document.createElement('script');
             s.id = 'ranking-script-data';
-            // 加入隨機數防快取，確保讀到最新檔案
             s.src = 'ranking.js?v=' + Date.now(); 
             
             s.onload = function() {
-                // 檢查 ranking.js 裡的變數是否載入成功
                 if (typeof rankingData !== 'undefined') {
                     const body = document.getElementById('leaderboard-body');
                     const loading = document.getElementById('leaderboard-loading');
@@ -206,7 +248,6 @@
                     table.style.display = 'table';
                     body.innerHTML = ''; 
 
-                    // 渲染排行榜 (前 10 名)
                     rankingData.slice(0, 10).forEach((user, index) => {
                         let trophy = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : (index + 1);
                         let icon = jobIcons[user.job] || "🛡️";
@@ -234,10 +275,7 @@
             document.body.appendChild(s);
         }
 
-        // ✨ 初始化：打開網頁讀一次
         loadRankingFromLocal();
-        
-        // ✨ 自動刷新：每 60 秒抓取一次本地檔案更新榜單
         setInterval(loadRankingFromLocal, 60000); 
     </script>
 </body>
