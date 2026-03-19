@@ -20,7 +20,6 @@
             color: #eee;
             line-height: 1.7;
             background-image: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%);
-            /* 確保背景可以捲動 */
             min-height: 100vh;
         }
 
@@ -30,7 +29,6 @@
             border: 2px solid #333; border-radius: 20px;
             box-shadow: 0 0 40px rgba(0,0,0,0.8), inset 0 0 15px rgba(255,215,0,0.1);
             backdrop-filter: blur(10px);
-            /* ✨ 這裡已經移除了 floatPage 動畫，讓網頁保持穩定 */
         }
 
         .header-info { text-align: center; color: #777; font-size: 0.9em; letter-spacing: 1px; margin-bottom: 10px; }
@@ -105,7 +103,7 @@
                 <li><span class="highlight">全服共享紅包：</span> 魔王倒下後，參與者可獲得 <span class="highlight">200 XP</span>！</li>
                 <li><span class="highlight">魔王攻擊：</span> 魔王戰期間隨機攻擊，中招者將被"禁言"，如<span class="highlight">累積震飛20次</span>可獲得<span class="pink-light">認證非洲人</span>稀有稱號！</li>
                 <li><span class="highlight">尾刀霸主：</span> 給予魔王最後一擊的勇者，直接領取 <span class="highlight">500 XP</span>！</li>
-                 <li><span class="highlight">魔王終結者：</span> 隨機抽一位勇者獲得該稀有稱號<span class="pink-light">魔王終結者</span>！ </li>
+                <li><span class="highlight">魔王終結者：</span> 隨機抽一位勇者獲得該稀有稱號<span class="pink-light">魔王終結者</span>！ </li>
                 <li><span class="highlight">超級大賽狗：</span> 0.01% 機率觸發 <span class="pink-light">天選爆擊 1000 傷</span> 並獲得永久專屬稱號！</li>
             </ul>
         </div>
@@ -186,34 +184,61 @@
             "冒險者": "🛡️"
         };
 
-        fetch('https://api.myjson.online/v1/records/1c0dff27-4979-4ae2-9724-5256a690bb62')
-        .then(response => response.json())
-        .then(res => {
-            const leaderboardData = res.data; 
-            const body = document.getElementById('leaderboard-body');
-            document.getElementById('leaderboard-loading').style.display = 'none';
-            document.getElementById('rank-table').style.display = 'table';
-            body.innerHTML = ''; 
-            leaderboardData.slice(0, 10).forEach((user, index) => {
-                let trophy = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : (index + 1);
-                let icon = jobIcons[user.job] || "🛡️";
-                body.innerHTML += `
-                    <tr>
-                        <td style="font-size:1.2em; text-align:center;">${trophy}</td>
-                        <td style="color:white;">
-                            <span style="color:#888; font-size:0.85em; margin-right:5px;">${icon} ${user.job}</span>
-                            <span style="color:var(--gold); font-weight:bold; margin-right:8px;">Lv.${user.lvl || 1}</span>
-                            <span style="font-weight:bold;">${user.name}</span>
-                        </td>
-                        <td style="text-align:right; color:var(--gold); font-weight:bold;">
-                            ${(user.xp || 0).toLocaleString()} <span style="font-size:0.8em; color:#888;">XP</span>
-                        </td>
-                    </tr>`;
-            });
-        })
-        .catch(err => {
-            document.getElementById('leaderboard-loading').innerText = '榜單召喚失敗，請重新整理！';
-        });
+        function loadRankingFromLocal() {
+            // ✨ 移除舊的 script 標籤防止堆積
+            const oldScript = document.getElementById('ranking-script-data');
+            if (oldScript) oldScript.remove();
+
+            // ✨ 建立新的 script 標籤載入本地 ranking.js
+            const s = document.createElement('script');
+            s.id = 'ranking-script-data';
+            // 加入隨機數防快取，確保讀到最新檔案
+            s.src = 'ranking.js?v=' + Date.now(); 
+            
+            s.onload = function() {
+                // 檢查 ranking.js 裡的變數是否載入成功
+                if (typeof rankingData !== 'undefined') {
+                    const body = document.getElementById('leaderboard-body');
+                    const loading = document.getElementById('leaderboard-loading');
+                    const table = document.getElementById('rank-table');
+                    
+                    loading.style.display = 'none';
+                    table.style.display = 'table';
+                    body.innerHTML = ''; 
+
+                    // 渲染排行榜 (前 10 名)
+                    rankingData.slice(0, 10).forEach((user, index) => {
+                        let trophy = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : (index + 1);
+                        let icon = jobIcons[user.job] || "🛡️";
+                        
+                        body.innerHTML += `
+                            <tr>
+                                <td style="font-size:1.2em; text-align:center;">${trophy}</td>
+                                <td style="color:white;">
+                                    <span style="color:#888; font-size:0.85em; margin-right:5px;">${icon} ${user.job}</span>
+                                    <span style="color:var(--gold); font-weight:bold; margin-right:8px;">Lv.${user.lvl}</span>
+                                    <span style="font-weight:bold;">${user.name}</span>
+                                </td>
+                                <td style="text-align:right; color:var(--gold); font-weight:bold;">
+                                    ${(user.xp || 0).toLocaleString()} <span style="font-size:0.8em; color:#888;">XP</span>
+                                </td>
+                            </tr>`;
+                    });
+                }
+            };
+            
+            s.onerror = function() {
+                document.getElementById('leaderboard-loading').innerText = '尚未生成排行榜檔案 (請先在機器人執行 Test)';
+            };
+
+            document.body.appendChild(s);
+        }
+
+        // ✨ 初始化：打開網頁讀一次
+        loadRankingFromLocal();
+        
+        // ✨ 自動刷新：每 60 秒抓取一次本地檔案更新榜單
+        setInterval(loadRankingFromLocal, 60000); 
     </script>
 </body>
 </html>
