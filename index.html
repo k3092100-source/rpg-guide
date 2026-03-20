@@ -20,7 +20,6 @@
             color: #eee;
             line-height: 1.7;
             background-image: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%);
-            /* 確保背景可以捲動 */
             min-height: 100vh;
         }
 
@@ -50,6 +49,23 @@
         .highlight { color: var(--gold); font-weight: bold; text-shadow: 0 0 5px rgba(255,215,0,0.5); }
         .pink-light { color: var(--neon-pink); font-weight: bold; }
 
+        /* ✨ 新增：即時狀態列樣式 */
+        .live-status-bar {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .status-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid #444;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .status-label { font-size: 0.9em; color: #888; margin-bottom: 5px; }
+        .status-val { font-size: 1.3em; font-weight: bold; }
+
         .job-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 30px; margin-top: 25px; }
         .job-box {
             background: rgba(255, 255, 255, 0.03); padding: 30px; border-radius: 12px;
@@ -73,7 +89,6 @@
 
         .rule-box { background: rgba(255, 255, 255, 0.05); border: 1px solid #444; padding: 25px; border-radius: 12px; margin-top: 25px; }
         
-        /* 指令清單樣式 */
         .cmd-list { margin-top: 20px; }
         .cmd-item { 
             background: rgba(0, 212, 255, 0.05); 
@@ -202,6 +217,18 @@
         
         <h2>🏆 年度霸權即時榜 (Top 10)</h2>
         <div class="rule-box" style="background: rgba(0,0,0,0.3);">
+            
+            <div class="live-status-bar">
+                <div class="status-item">
+                    <div class="status-label">👹 當前王怪預報</div>
+                    <div id="boss-display" class="status-val" style="color: #ff4d4d;">讀取中...</div>
+                </div>
+                <div class="status-item" id="burn-box">
+                    <div class="status-label">🔥 經驗加倍狀態</div>
+                    <div id="burn-display" class="status-val">讀取中...</div>
+                </div>
+            </div>
+
             <div id="leaderboard-loading">正在召喚勇者排名...</div>
             <table id="rank-table" class="rank-table" style="display:none;">
                 <thead>
@@ -217,11 +244,14 @@
 
         <div class="footer">
             ◤ 第一賽季：賽季平衡版 ◢ &nbsp; | &nbsp; <span class="highlight">5 月正式服上線</span> &nbsp; | &nbsp; 製作人：萌萌吃吃<br>
-            * 數值將視魔王擊殺速度隨時微調，最終解釋權歸萌萌吃吃所有！ *
+            * 雲端數據每 30 秒自動更新一次 *
         </div>
     </div>
 
     <script>
+        // 🔑 妳的新 Google 雲端網址
+        const cloudUrl = 'https://script.google.com/macros/s/AKfycbxHW3ODsaseTh_KYMlGiLI6ZNo-DfYB8kj4rOsQAyMXz73JS3ynFttK83ZnvZLBdxmJTw/exec';
+
         const jobIcons = {
             "戰士": "⚔️", "狂戰士": "🔥",
             "弓箭手": "🏹", "疾風神射手": "🍃",
@@ -230,53 +260,73 @@
             "冒險者": "🛡️"
         };
 
-        function loadRankingFromLocal() {
-            const oldScript = document.getElementById('ranking-script-data');
-            if (oldScript) oldScript.remove();
+        // 🚀 核心：向雲端抓取所有大禮包數據
+        async function fetchRpgData() {
+            try {
+                const response = await fetch(cloudUrl);
+                const data = await response.json();
 
-            const s = document.createElement('script');
-            s.id = 'ranking-script-data';
-            s.src = 'ranking.js?v=' + Date.now(); 
-            
-            s.onload = function() {
-                if (typeof rankingData !== 'undefined') {
-                    const body = document.getElementById('leaderboard-body');
-                    const loading = document.getElementById('leaderboard-loading');
-                    const table = document.getElementById('rank-table');
-                    
-                    loading.style.display = 'none';
-                    table.style.display = 'table';
-                    body.innerHTML = ''; 
+                // 1. 更新排行榜 (data.ranks)
+                renderLeaderboard(data.ranks);
 
-                    rankingData.slice(0, 10).forEach((user, index) => {
-                        let trophy = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : (index + 1);
-                        let icon = jobIcons[user.job] || "🛡️";
-                        
-                        body.innerHTML += `
-                            <tr>
-                                <td style="font-size:1.2em; text-align:center;">${trophy}</td>
-                                <td style="color:white;">
-                                    <span style="color:#888; font-size:0.85em; margin-right:5px;">${icon} ${user.job}</span>
-                                    <span style="color:var(--gold); font-weight:bold; margin-right:8px;">Lv.${user.lvl}</span>
-                                    <span style="font-weight:bold;">${user.name}</span>
-                                </td>
-                                <td style="text-align:right; color:var(--gold); font-weight:bold;">
-                                    ${(user.xp || 0).toLocaleString()} <span style="font-size:0.8em; color:#888;">XP</span>
-                                </td>
-                            </tr>`;
-                    });
+                // 2. 更新王怪資訊 (data.boss)
+                document.getElementById('boss-display').innerText = `${data.boss.name} (${data.boss.time})`;
+
+                // 3. 更新燃燒狀態 (data.burning)
+                const burnDisplay = document.getElementById('burn-display');
+                const burnBox = document.getElementById('burn-box');
+                if (data.burning === "ON") {
+                    burnDisplay.innerText = "10倍燃燒中！";
+                    burnDisplay.style.color = "#ff00ff";
+                    burnBox.style.borderColor = "#ff00ff";
+                    burnBox.style.boxShadow = "0 0 10px rgba(255,0,255,0.2)";
+                } else {
+                    burnDisplay.innerText = "一般冒險時段";
+                    burnDisplay.style.color = "#888";
+                    burnBox.style.borderColor = "#444";
+                    burnBox.style.boxShadow = "none";
                 }
-            };
-            
-            s.onerror = function() {
-                document.getElementById('leaderboard-loading').innerText = '尚未生成排行榜檔案 (請先在機器人執行 Test)';
-            };
 
-            document.body.appendChild(s);
+                document.getElementById('leaderboard-loading').style.display = 'none';
+                document.getElementById('rank-table').style.display = 'table';
+
+            } catch (err) {
+                console.error("雲端連線失敗:", err);
+                document.getElementById('leaderboard-loading').innerText = '雲端勇者正在趕路中... (請檢查連線)';
+            }
         }
 
-        loadRankingFromLocal();
-        setInterval(loadRankingFromLocal, 60000); 
+        function renderLeaderboard(ranks) {
+            const body = document.getElementById('leaderboard-body');
+            body.innerHTML = ''; 
+
+            if (!ranks || ranks.length === 0) {
+                body.innerHTML = '<tr><td colspan="3" style="text-align:center; color:#666;">尚未有數據上傳</td></tr>';
+                return;
+            }
+
+            ranks.forEach((user, index) => {
+                let trophy = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : (index + 1);
+                let icon = jobIcons[user.job] || "🛡️";
+                
+                body.innerHTML += `
+                    <tr>
+                        <td style="font-size:1.2em; text-align:center;">${trophy}</td>
+                        <td style="color:white;">
+                            <span style="color:#888; font-size:0.85em; margin-right:5px;">${icon} ${user.job}</span>
+                            <span style="color:var(--gold); font-weight:bold; margin-right:8px;">Lv.${user.lvl}</span>
+                            <span style="font-weight:bold;">${user.name}</span>
+                        </td>
+                        <td style="text-align:right; color:var(--gold); font-weight:bold;">
+                            ${(user.xp || 0).toLocaleString()} <span style="font-size:0.8em; color:#888;">XP</span>
+                        </td>
+                    </tr>`;
+            });
+        }
+
+        // 啟動定時器
+        fetchRpgData();
+        setInterval(fetchRpgData, 30000); // 30秒刷一次
     </script>
 </body>
 </html>
