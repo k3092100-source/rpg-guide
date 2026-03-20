@@ -49,7 +49,6 @@
         .highlight { color: var(--gold); font-weight: bold; text-shadow: 0 0 5px rgba(255,215,0,0.5); }
         .pink-light { color: var(--neon-pink); font-weight: bold; }
 
-        /* ✨ 新增：即時狀態列樣式 */
         .live-status-bar {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -190,7 +189,7 @@
                 </div>
                 <div class="second-job">
                     🍃 <b>[二轉 Lv.50] 疾風神射手：</b><br>
-                    基礎 10 傷，疊滿極限衝到 <span class="highlight">110</span>！輸出最穩定的重砲台。
+                    基礎 10 傷，疊滿極限衝到 <span class="highlight">110</span>！輸出最穩定的重砲台.
                 </div>
             </div>
 
@@ -200,7 +199,7 @@
                 <div><b>一轉優勢：</b> 具備 <span class="highlight">20%</span> 機率噴出 <span class="highlight">150</span> 爆擊傷害，不需要熱機！</div>
                 <div class="second-job">
                     🌚 <b>[二轉 Lv.50] 影之殺手：</b><br>
-                    爆率 <span class="highlight">15%</span>、爆傷直接噴 <span class="highlight">300</span>！奪取尾刀的最強競爭者。
+                    爆率 <span class="highlight">15%</span>、爆傷直接噴 <span class="highlight">300</span>！奪取尾刀的最強競爭者.
                 </div>
             </div>
 
@@ -210,7 +209,7 @@
                 <div><b>一轉優勢：</b> 全服共享紅包翻 <span class="highlight">4 倍 (800 XP)</span>！升級速度全職第一。</div>
                 <div class="second-job">
                     💎 <b>[二轉 Lv.50] 大亨：</b><br>
-                    共享紅包極致 <span class="highlight">10 倍 (2,000 XP)</span>！年底實體大獎的最強力候選人。
+                    共享紅包極致 <span class="highlight">10 倍 (2,000 XP)</span>！年底實體大獎的最強力候選人.
                 </div>
             </div>
         </div>
@@ -249,30 +248,44 @@
     </div>
 
     <script>
-        // 🔑 妳的新 Google 雲端網址
         const cloudUrl = 'https://script.google.com/macros/s/AKfycbxHW3ODsaseTh_KYMlGiLI6ZNo-DfYB8kj4rOsQAyMXz73JS3ynFttK83ZnvZLBdxmJTw/exec';
+        const jobIcons = { "戰士": "⚔️", "狂戰士": "🔥", "弓箭手": "🏹", "疾風神射手": "🍃", "刺客": "💀", "影之殺手": "🌚", "商人": "💰", "大亨": "💎", "冒險者": "🛡️" };
 
-        const jobIcons = {
-            "戰士": "⚔️", "狂戰士": "🔥",
-            "弓箭手": "🏹", "疾風神射手": "🍃",
-            "刺客": "💀", "影之殺手": "🌚",
-            "商人": "💰", "大亨": "💎",
-            "冒險者": "🛡️"
-        };
+        let bossTimerInterval; // 全域變數，用來控制倒數
 
-        // 🚀 核心：向雲端抓取所有大禮包數據
         async function fetchRpgData() {
             try {
                 const response = await fetch(cloudUrl);
                 const data = await response.json();
 
-                // 1. 更新排行榜 (data.ranks)
+                // 1. 更新排行榜
                 renderLeaderboard(data.ranks);
 
-                // 2. 更新王怪資訊 (data.boss)
-                document.getElementById('boss-display').innerText = `${data.boss.name} (${data.boss.time})`;
+                // 2. 更新魔王與倒數 (核心引擎)
+                const bossDisplay = document.getElementById('boss-display');
+                if (bossTimerInterval) clearInterval(bossTimerInterval);
 
-                // 3. 更新燃燒狀態 (data.burning)
+                if (data.boss.targetTs) {
+                    bossTimerInterval = setInterval(() => {
+                        const now = new Date().getTime();
+                        const distance = data.boss.targetTs - now;
+
+                        if (distance <= 0) {
+                            bossDisplay.innerText = `${data.boss.name} 🔥 正在出現！`;
+                            clearInterval(bossTimerInterval);
+                        } else {
+                            const h = Math.floor(distance / 3600000);
+                            const m = Math.floor((distance % 3600000) / 60000);
+                            const s = Math.floor((distance % 60000) / 1000);
+                            const countdown = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+                            bossDisplay.innerText = `${data.boss.name} ⏳ ${countdown}`;
+                        }
+                    }, 1000);
+                } else {
+                    bossDisplay.innerText = `${data.boss.name} (${data.boss.time})`;
+                }
+
+                // 3. 更新燃燒狀態
                 const burnDisplay = document.getElementById('burn-display');
                 const burnBox = document.getElementById('burn-box');
                 if (data.burning === "ON") {
@@ -292,23 +305,19 @@
 
             } catch (err) {
                 console.error("雲端連線失敗:", err);
-                document.getElementById('leaderboard-loading').innerText = '雲端勇者正在趕路中... (請檢查連線)';
             }
         }
 
         function renderLeaderboard(ranks) {
             const body = document.getElementById('leaderboard-body');
             body.innerHTML = ''; 
-
             if (!ranks || ranks.length === 0) {
                 body.innerHTML = '<tr><td colspan="3" style="text-align:center; color:#666;">尚未有數據上傳</td></tr>';
                 return;
             }
-
             ranks.forEach((user, index) => {
                 let trophy = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : (index + 1);
                 let icon = jobIcons[user.job] || "🛡️";
-                
                 body.innerHTML += `
                     <tr>
                         <td style="font-size:1.2em; text-align:center;">${trophy}</td>
@@ -324,9 +333,8 @@
             });
         }
 
-        // 啟動定時器
         fetchRpgData();
-        setInterval(fetchRpgData, 30000); // 30秒刷一次
+        setInterval(fetchRpgData, 30000);
     </script>
 </body>
 </html>
