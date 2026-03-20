@@ -65,6 +65,22 @@
         .status-label { font-size: 0.9em; color: #888; margin-bottom: 5px; }
         .status-val { font-size: 1.3em; font-weight: bold; }
 
+        /* 🔍 搜尋框樣式 */
+        .search-box {
+            display: flex; gap: 10px; margin-bottom: 20px;
+        }
+        .search-input {
+            flex: 1; padding: 12px 15px; border-radius: 8px; border: 1px solid #444;
+            background: rgba(0,0,0,0.5); color: white; outline: none; transition: border 0.3s;
+        }
+        .search-input:focus { border-color: var(--neon-blue); }
+        .search-btn {
+            padding: 10px 20px; background: var(--neon-blue); color: black;
+            border: none; border-radius: 8px; font-weight: bold; cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .search-btn:active { transform: scale(0.95); }
+
         .job-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 30px; margin-top: 25px; }
         .job-box {
             background: rgba(255, 255, 255, 0.03); padding: 30px; border-radius: 12px;
@@ -174,43 +190,22 @@
                 <div class="job-title">⚔️ 戰士</div>
                 <div class="job-motto">「血量階梯增傷，最後 10 分鐘我就是戰神！」</div>
                 <div><b>一轉優勢：</b> 基礎傷害 <span class="highlight">20</span>。魔王血量每掉 20%，傷害額外 <span class="highlight">+10</span>。</div>
-                <div class="second-job">
-                    🔥 <b>[二轉 Lv.50] 狂戰士：</b><br>
-                    基礎傷害 <span class="highlight">45</span>，殘血加成每階 <span class="highlight">+15</span>，極限爆發力高達 180！
-                </div>
+                <div class="second-job">🔥 <b>[二轉 Lv.50] 狂戰士：</b><br>基礎傷害 <span class="highlight">45</span>，極限爆發力高達 180！</div>
             </div>
-            
             <div class="job-box archer">
                 <div class="job-title">🏹 弓箭手</div>
                 <div class="job-motto">「絕對專注，中斷即地獄。」</div>
-                <div><b>一轉優勢：</b> 基礎 <span class="highlight">5</span> 傷。每 30 秒疊層 <span class="highlight">+5</span>，最高可疊每次 55 傷害。超過 5 分鐘未攻擊，疊層歸零。</div>
-                <div style="margin-top: 10px; color: #4dff4d; font-size: 0.9em;">
-                    🛡️ <b>生存 BUFF：</b> 全職最低震飛率 (<span class="highlight">1%</span>) & 最快回場速度 (<span class="highlight">10秒</span>)。
-                </div>
-                <div class="second-job">
-                    🍃 <b>[二轉 Lv.50] 疾風神射手：</b><br>
-                    基礎 10 傷，疊滿極限衝到 <span class="highlight">110</span>！輸出最穩定的重砲台.
-                </div>
+                <div class="second-job">🍃 <b>[二轉 Lv.50] 疾風神射手：</b><br>疊滿極限衝到 <span class="highlight">110</span>！</div>
             </div>
-
             <div class="job-box assassin">
                 <div class="job-title">💀 刺客</div>
                 <div class="job-motto">「歐皇代名詞，開場就拚一刀入魂！」</div>
-                <div><b>一轉優勢：</b> 具備 <span class="highlight">20%</span> 機率噴出 <span class="highlight">150</span> 爆擊傷害，不需要熱機！</div>
-                <div class="second-job">
-                    🌚 <b>[二轉 Lv.50] 影之殺手：</b><br>
-                    爆率 <span class="highlight">15%</span>、爆傷直接噴 <span class="highlight">300</span>！奪取尾刀的最強競爭者.
-                </div>
+                <div class="second-job">🌚 <b>[二轉 Lv.50] 影之殺手：</b><br>爆傷直接噴 <span class="highlight">300</span>！</div>
             </div>
-
             <div class="job-box merchant">
                 <div class="job-title">💰 商人</div>
                 <div class="job-motto">「打王是你們的事，升級是我的事。」</div>
-                <div><b>一轉優勢：</b> 全服共享紅包翻 <span class="highlight">4 倍 (800 XP)</span>！升級速度全職第一。</div>
-                <div class="second-job">
-                    💎 <b>[二轉 Lv.50] 大亨：</b><br>
-                    共享紅包極致 <span class="highlight">10 倍 (2,000 XP)</span>！年底實體大獎的最強力候選人.
-                </div>
+                <div class="second-job">💎 <b>[二轉 Lv.50] 大亨：</b><br>共享紅包極致 <span class="highlight">10 倍 (2,000 XP)</span>！</div>
             </div>
         </div>
         
@@ -226,6 +221,16 @@
                     <div class="status-label">🔥 經驗加倍狀態</div>
                     <div id="burn-display" class="status-val">讀取中...</div>
                 </div>
+            </div>
+
+            <div style="margin-bottom: 25px;">
+                <div class="status-label" style="text-align: left; margin-left: 5px;">🔍 勇者名冊搜尋</div>
+                <div class="search-box">
+                    <input type="text" id="search-input" class="search-input" placeholder="輸入 Twitch ID (例如: jesse_...)">
+                    <button onclick="searchUser()" class="search-btn">查詢</button>
+                </div>
+                <div id="search-result" style="display: none; margin-top: 10px; text-align: left;">
+                    </div>
             </div>
 
             <div id="leaderboard-loading">正在召喚勇者排名...</div>
@@ -251,17 +256,50 @@
         const cloudUrl = 'https://script.google.com/macros/s/AKfycbxHW3ODsaseTh_KYMlGiLI6ZNo-DfYB8kj4rOsQAyMXz73JS3ynFttK83ZnvZLBdxmJTw/exec';
         const jobIcons = { "戰士": "⚔️", "狂戰士": "🔥", "弓箭手": "🏹", "疾風神射手": "🍃", "刺客": "💀", "影之殺手": "🌚", "商人": "💰", "大亨": "💎", "冒險者": "🛡️" };
 
-        let bossTimerInterval; // 全域變數，用來控制倒數
+        let bossTimerInterval; 
+
+        // ✨ 新增：個人資料查詢函數
+        async function searchUser() {
+            const userId = document.getElementById('search-input').value.trim();
+            const resultBox = document.getElementById('search-result');
+            
+            if (!userId) return;
+            
+            resultBox.style.display = 'block';
+            resultBox.innerHTML = '<span style="color: #888;">正在翻閱名冊...</span>';
+
+            try {
+                // 網址後面帶參數 ?user=ID 
+                const response = await fetch(`${cloudUrl}?user=${userId}`);
+                const user = await response.json();
+
+                if (user.error || !user.name) {
+                    resultBox.innerHTML = `<span style="color: #ff4d4d;">❌ 找不到勇者 "${userId}"，請確認 ID 是否正確 (或尚未進入排行榜)。</span>`;
+                } else {
+                    const icon = jobIcons[user.job] || "🛡️";
+                    resultBox.innerHTML = `
+                        <div style="background: rgba(0, 212, 255, 0.1); padding: 15px; border-radius: 10px; border: 1px solid var(--neon-blue);">
+                            <div style="font-size: 1.1em; color: var(--gold); font-weight: bold;">📜 冒險者檔案：${user.name}</div>
+                            <div style="margin-top: 8px; font-size: 0.95em;">
+                                職業：${icon} ${user.job} | 
+                                等級：<span class="highlight">Lv.${user.lvl}</span> | 
+                                累積貢獻：<span class="highlight">${user.xp.toLocaleString()} XP</span>
+                            </div>
+                        </div>
+                    `;
+                }
+            } catch (err) {
+                resultBox.innerHTML = '<span style="color: #ff4d4d;">⚠️ 連線失敗，請稍後再試。</span>';
+            }
+        }
 
         async function fetchRpgData() {
             try {
                 const response = await fetch(cloudUrl);
                 const data = await response.json();
 
-                // 1. 更新排行榜
                 renderLeaderboard(data.ranks);
 
-                // 2. 更新魔王與倒數 (核心引擎)
                 const bossDisplay = document.getElementById('boss-display');
                 if (bossTimerInterval) clearInterval(bossTimerInterval);
 
@@ -285,7 +323,6 @@
                     bossDisplay.innerText = `${data.boss.name} (${data.boss.time})`;
                 }
 
-                // 3. 更新燃燒狀態
                 const burnDisplay = document.getElementById('burn-display');
                 const burnBox = document.getElementById('burn-box');
                 if (data.burning === "ON") {
