@@ -52,7 +52,6 @@
         .highlight { color: var(--gold); font-weight: bold; text-shadow: 0 0 5px rgba(255,215,0,0.5); }
         .pink-light { color: var(--neon-pink); font-weight: bold; }
 
-        /* 職業欄位樣式優化 */
         .job-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 30px; margin-top: 25px; }
         .job-box {
             background: rgba(255, 255, 255, 0.03); padding: 30px; border-radius: 12px;
@@ -69,7 +68,6 @@
         .job-tag { font-size: 0.4em; padding: 3px 10px; border-radius: 5px; color: white; vertical-align: middle; }
         .job-motto { font-style: italic; color: #aaa; font-size: 0.9em; margin-bottom: 15px; }
         
-        /* 職業顏色 */
         .warrior { border-left-color: var(--warrior-red); }
         .archer { border-left-color: var(--archer-green); }
         .assassin { border-left-color: var(--assassin-purple); }
@@ -80,7 +78,6 @@
             margin-top: 15px; padding-top: 15px; font-size: 1em;
         }
 
-        /* 搜尋與榜單 */
         .live-status-bar { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
         .status-item { background: rgba(255, 255, 255, 0.05); border: 1px solid #444; padding: 15px; border-radius: 12px; text-align: center; }
         .status-label { font-size: 0.9em; color: #888; margin-bottom: 5px; }
@@ -115,9 +112,10 @@
         <div class="rule-box">
             <p>⚠️⚠️⚠️<span class="pink-light">3/22【緊急維護公告】因資料遺失，伺服器封測將於4月再重新開放 ⚠️⚠️⚠️</span>！</p>
             <p>這不是普通的掛網，這是 <span class="pink-light">年度霸權爭奪戰</span>！</p>
-            <p>本季等級上限為 <span class="highlight">Lv.100</span>。聊天室發話可獲取基本 10XP (3分鐘CD) 若發生任何洗頻行為MOD有權禁言600秒。
+            <p>本季等級上限為 <span class="highlight">Lv.100</span>。聊天室發話可獲取基本 10XP (3分鐘CD) 若發生任何洗頻行為MOD有權禁言600秒。</p>
             <p>正式版5月開始～將於2026年底獎勵前三名或以上勇者給予<span class="highlight">實體獎品</span>，跟我一起拚！</p>
         </div>
+
         <h2>👹 萬血魔王：打王不打混</h2>
         <div class="rule-box">
             <ul style="list-style-type: disc; padding-left: 20px;">
@@ -138,6 +136,7 @@
                 </li>
             </ul>
         </div>
+
         <h2>🎭 職業體系 (Lv.15 一轉 / Lv.50 二轉)</h2>
         <div class="job-grid">
             <div class="job-box warrior">
@@ -180,13 +179,14 @@
                 </div>
             </div>
         </div>
+
         <h2>🔥 超爆經驗燃燒加倍時段</h2>
         <div class="rule-box" style="border-left: 6px solid var(--neon-pink);">
             <p>於 <span class="pink-light">工商直播</span> 或特定 <span class="pink-light">驚喜時段</span>，將全服開啟 <span class="pink-light">10 倍燃燒模式</span>！</p>
             <p>燃燒期間每句聊天將獲得 <span class="highlight">100 XP</span> (冷卻時間與平時相同)。這是各位勇者衝刺等級、反超排名、奪取年底大獎的最佳時機！</p>
         </div>
 
-         <h2>📜 冒險者公會：指令手冊</h2>
+        <h2>📜 冒險者公會：指令手冊</h2>
         <div class="rule-box">
             <div class="cmd-list">
                 <div class="cmd-item">
@@ -245,63 +245,41 @@
             * 若搜尋不到自己，請在實況間輸入 !RPG 重新同步數據 *
         </div>
     </div>
-<script>
-        // 🌟 鎖定你的最新 GAS URL
+
+    <script>
         const cloudUrl = 'https://script.google.com/macros/s/AKfycbyI6ZlONHRQDp2Ts8OgDrOrHpAW16wQlXLupC2CT-i0-ck7XTo-ZAHmo2luYY13LNLwUQ/exec';
-        
-        const jobIcons = { 
-            "戰士": "⚔️", "狂戰士": "🔥", 
-            "弓箭手": "🏹", "神射手": "🍃", "神射手": "🍃",
-            "刺客": "💀", "影之殺手": "🌚", 
-            "商人": "💰", "大亨": "💎", 
-            "初心者": "🛡️", "冒險者": "🛡️" 
-        };
+        const jobIcons = { "戰士": "⚔️", "狂戰士": "🔥", "弓箭手": "🏹", "神射手": "🍃", "刺客": "💀", "影之殺手": "🌚", "商人": "💰", "大亨": "💎", "初心者": "🛡️" };
 
         let bossTimerInterval; 
 
-        // 🌟 修正搜尋邏輯：不再傳送 ?user= 避免洗掉玩家資料
         async function searchUser() {
             const searchText = document.getElementById('search-input').value.trim().toLowerCase();
             const resultBox = document.getElementById('search-result');
             if (!searchText) return;
-
             resultBox.style.display = 'block';
-            resultBox.innerHTML = '<span style="color: #888;">正在定位勇者...</span>';
-
+            resultBox.innerHTML = '<span style="color: #888;">正在翻閱冒險者名冊...</span>';
             try {
-                const response = await fetch(cloudUrl, { mode: 'cors' });
+                const response = await fetch(cloudUrl);
                 const data = await response.json();
-                
-                // 比對 ID 或 名稱
-                const user = data.ranks.find(r => 
-                    r.id.toLowerCase() === searchText || 
-                    r.name.toLowerCase() === searchText
-                );
-
+                const user = data.ranks.find(r => r.id.toLowerCase() === searchText || r.name.toLowerCase() === searchText);
                 if (!user) {
-                    resultBox.innerHTML = `<span style="color: #ff4d4d;">❌ 找不到 "${searchText}"，請確保 ID 正確。</span>`;
+                    resultBox.innerHTML = `<span style="color: #ff4d4d;">❌ 找不到 "${searchText}"。</span>`;
                 } else {
                     const icon = jobIcons[user.job] || "🛡️";
                     resultBox.innerHTML = `
                         <div style="background: rgba(0, 212, 255, 0.1); padding: 15px; border-radius: 10px; border: 1px solid var(--neon-blue);">
                             <div style="font-size: 1.1em; color: var(--gold); font-weight: bold;">📜 勇者：${user.name}</div>
                             <div style="margin-top: 5px;">${icon} ${user.job} | Lv.${user.lvl} | <span class="highlight">${user.xp.toLocaleString()} XP</span></div>
-                            <div style="font-size: 0.8em; color: #aaa; margin-top: 5px;">稱號：${user.title}</div>
                         </div>`;
                 }
-            } catch (err) { 
-                resultBox.innerHTML = '<span style="color: #ff4d4d;">連線超時，請檢查網路或確認試算表已發佈。</span>'; 
-            }
+            } catch (err) { resultBox.innerHTML = '連線失敗'; }
         }
 
         async function fetchRpgData() {
             try {
-                const response = await fetch(cloudUrl, { mode: 'cors' });
+                const response = await fetch(cloudUrl);
                 const data = await response.json();
-                
                 renderLeaderboard(data.ranks);
-                
-                // 魔王與燃燒模式顯示
                 const bossDisplay = document.getElementById('boss-display');
                 if (bossTimerInterval) clearInterval(bossTimerInterval);
                 if (data.boss && data.boss.targetTs > 0) {
@@ -317,15 +295,12 @@
                         }
                     }, 1000);
                 } else { bossDisplay.innerText = "👹 萬血魔王"; }
-
                 const burnDisplay = document.getElementById('burn-display');
-                const isBurn = data.burning === "ON";
-                burnDisplay.innerText = isBurn ? "10倍燃燒中！" : "一般冒險";
-                burnDisplay.style.color = isBurn ? "#ff00ff" : "#888";
-
+                burnDisplay.innerText = data.burning === "ON" ? "10倍燃燒中！" : "一般冒險";
+                burnDisplay.style.color = data.burning === "ON" ? "#ff00ff" : "#888";
                 document.getElementById('leaderboard-loading').style.display = 'none';
                 document.getElementById('rank-table').style.display = 'table';
-            } catch (err) { console.error('Fetch Error:', err); }
+            } catch (err) { console.error(err); }
         }
 
         function renderLeaderboard(ranks) {
@@ -333,11 +308,7 @@
             body.innerHTML = ranks.slice(0, 10).map((user, index) => {
                 let trophy = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : (index + 1);
                 let icon = jobIcons[user.job] || "🛡️";
-                return `<tr>
-                    <td style="text-align:center;">${trophy}</td>
-                    <td><span style="color:#888; font-size:0.8em;">${icon} ${user.job}</span> <b style="color:var(--gold);">Lv.${user.lvl}</b> ${user.name}</td>
-                    <td style="text-align:right; font-weight:bold; color:var(--gold);">${(user.xp || 0).toLocaleString()} XP</td>
-                </tr>`;
+                return `<tr><td style="text-align:center;">${trophy}</td><td>${icon} Lv.${user.lvl} ${user.name}</td><td style="text-align:right;">${(user.xp || 0).toLocaleString()} XP</td></tr>`;
             }).join('');
         }
 
