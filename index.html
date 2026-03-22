@@ -155,7 +155,7 @@
                 <div><b>[一轉] 刺客：</b> 基礎傷害10。 <span class="highlight">20%</span> 機率噴發 <span class="highlight">150</span> 點爆擊傷害！</div>
                 <div class="second-job">
                     🌚 <b>[二轉] 影之殺手：</b><br>
-                    爆擊率翻倍至 <span class="highlight">40%</span>！爆傷直衝 <span class="highlight">300</span>，搶尾刀最兇狠的賭徒。
+                    爆擊率翻倍至 <span class="highlight">40%</span>！爆傷直衝 <span class="highlight">300</span>，搶尾刀最兇狠的賭徒.
                 </div>
             </div>
 
@@ -259,17 +259,20 @@
             resultBox.style.display = 'block';
             resultBox.innerHTML = '<span style="color: #888;">正在翻閱冒險者名冊...</span>';
             try {
-                const response = await fetch(cloudUrl);
+                const response = await fetch(cloudUrl, { mode: 'cors' });
                 const data = await response.json();
+                // 同時搜尋 A欄(id) 或 B欄(name)
                 const user = data.ranks.find(r => r.id.toLowerCase() === searchText || r.name.toLowerCase() === searchText);
                 if (!user) {
                     resultBox.innerHTML = `<span style="color: #ff4d4d;">❌ 找不到 "${searchText}"。</span>`;
                 } else {
                     const icon = jobIcons[user.job] || "🛡️";
+                    // 🌟 顯示對調：user.id 現在是中文名，user.name 是帳號
                     resultBox.innerHTML = `
                         <div style="background: rgba(0, 212, 255, 0.1); padding: 15px; border-radius: 10px; border: 1px solid var(--neon-blue);">
-                            <div style="font-size: 1.1em; color: var(--gold); font-weight: bold;">📜 勇者：${user.name}</div>
+                            <div style="font-size: 1.1em; color: var(--gold); font-weight: bold;">📜 勇者：${user.id}</div>
                             <div style="margin-top: 5px;">${icon} ${user.job} | Lv.${user.lvl} | <span class="highlight">${user.xp.toLocaleString()} XP</span></div>
+                            <div style="color: #888; font-size: 0.8em; margin-top: 5px;">帳號：${user.name}</div>
                         </div>`;
                 }
             } catch (err) { resultBox.innerHTML = '連線失敗'; }
@@ -277,7 +280,7 @@
 
         async function fetchRpgData() {
             try {
-                const response = await fetch(cloudUrl);
+                const response = await fetch(cloudUrl, { mode: 'cors' });
                 const data = await response.json();
                 renderLeaderboard(data.ranks);
                 const bossDisplay = document.getElementById('boss-display');
@@ -308,7 +311,12 @@
             body.innerHTML = ranks.slice(0, 10).map((user, index) => {
                 let trophy = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : (index + 1);
                 let icon = jobIcons[user.job] || "🛡️";
-                return `<tr><td style="text-align:center;">${trophy}</td><td>${icon} Lv.${user.lvl} ${user.name}</td><td style="text-align:right;">${(user.xp || 0).toLocaleString()} XP</td></tr>`;
+                // 🌟 顯示對調：排行榜顯示 user.id (中文名)
+                return `<tr>
+                    <td style="text-align:center;">${trophy}</td>
+                    <td>${icon} <b style="color:var(--gold);">Lv.${user.lvl}</b> ${user.id}</td>
+                    <td style="text-align:right;">${(user.xp || 0).toLocaleString()} XP</td>
+                </tr>`;
             }).join('');
         }
 
