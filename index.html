@@ -245,4 +245,104 @@
             * 若搜尋不到自己，請在實況間輸入 !RPG 重新同步數據 *
         </div>
     </div>
+<script>
+        // 🌟 鎖定你的最新 GAS URL
+        const cloudUrl = 'https://script.google.com/macros/s/AKfycbyI6ZlONHRQDp2Ts8OgDrOrHpAW16wQlXLupC2CT-i0-ck7XTo-ZAHmo2luYY13LNLwUQ/exec';
+        
+        const jobIcons = { 
+            "戰士": "⚔️", "狂戰士": "🔥", 
+            "弓箭手": "🏹", "神射手": "🍃", "神射手": "🍃",
+            "刺客": "💀", "影之殺手": "🌚", 
+            "商人": "💰", "大亨": "💎", 
+            "初心者": "🛡️", "冒險者": "🛡️" 
+        };
 
+        let bossTimerInterval; 
+
+        // 🌟 修正搜尋邏輯：不再傳送 ?user= 避免洗掉玩家資料
+        async function searchUser() {
+            const searchText = document.getElementById('search-input').value.trim().toLowerCase();
+            const resultBox = document.getElementById('search-result');
+            if (!searchText) return;
+
+            resultBox.style.display = 'block';
+            resultBox.innerHTML = '<span style="color: #888;">正在定位勇者...</span>';
+
+            try {
+                const response = await fetch(cloudUrl, { mode: 'cors' });
+                const data = await response.json();
+                
+                // 比對 ID 或 名稱
+                const user = data.ranks.find(r => 
+                    r.id.toLowerCase() === searchText || 
+                    r.name.toLowerCase() === searchText
+                );
+
+                if (!user) {
+                    resultBox.innerHTML = `<span style="color: #ff4d4d;">❌ 找不到 "${searchText}"，請確保 ID 正確。</span>`;
+                } else {
+                    const icon = jobIcons[user.job] || "🛡️";
+                    resultBox.innerHTML = `
+                        <div style="background: rgba(0, 212, 255, 0.1); padding: 15px; border-radius: 10px; border: 1px solid var(--neon-blue);">
+                            <div style="font-size: 1.1em; color: var(--gold); font-weight: bold;">📜 勇者：${user.name}</div>
+                            <div style="margin-top: 5px;">${icon} ${user.job} | Lv.${user.lvl} | <span class="highlight">${user.xp.toLocaleString()} XP</span></div>
+                            <div style="font-size: 0.8em; color: #aaa; margin-top: 5px;">稱號：${user.title}</div>
+                        </div>`;
+                }
+            } catch (err) { 
+                resultBox.innerHTML = '<span style="color: #ff4d4d;">連線超時，請檢查網路或確認試算表已發佈。</span>'; 
+            }
+        }
+
+        async function fetchRpgData() {
+            try {
+                const response = await fetch(cloudUrl, { mode: 'cors' });
+                const data = await response.json();
+                
+                renderLeaderboard(data.ranks);
+                
+                // 魔王與燃燒模式顯示
+                const bossDisplay = document.getElementById('boss-display');
+                if (bossTimerInterval) clearInterval(bossTimerInterval);
+                if (data.boss && data.boss.targetTs > 0) {
+                    bossTimerInterval = setInterval(() => {
+                        const distance = data.boss.targetTs - new Date().getTime();
+                        if (distance <= 0) {
+                            bossDisplay.innerText = "魔王降臨中！";
+                            clearInterval(bossTimerInterval);
+                        } else {
+                            const m = Math.floor((distance % 3600000) / 60000);
+                            const s = Math.floor((distance % 60000) / 1000);
+                            bossDisplay.innerText = `${data.boss.name} ⏳ ${m}:${s.toString().padStart(2,'0')}`;
+                        }
+                    }, 1000);
+                } else { bossDisplay.innerText = "👹 萬血魔王"; }
+
+                const burnDisplay = document.getElementById('burn-display');
+                const isBurn = data.burning === "ON";
+                burnDisplay.innerText = isBurn ? "10倍燃燒中！" : "一般冒險";
+                burnDisplay.style.color = isBurn ? "#ff00ff" : "#888";
+
+                document.getElementById('leaderboard-loading').style.display = 'none';
+                document.getElementById('rank-table').style.display = 'table';
+            } catch (err) { console.error('Fetch Error:', err); }
+        }
+
+        function renderLeaderboard(ranks) {
+            const body = document.getElementById('leaderboard-body');
+            body.innerHTML = ranks.slice(0, 10).map((user, index) => {
+                let trophy = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : (index + 1);
+                let icon = jobIcons[user.job] || "🛡️";
+                return `<tr>
+                    <td style="text-align:center;">${trophy}</td>
+                    <td><span style="color:#888; font-size:0.8em;">${icon} ${user.job}</span> <b style="color:var(--gold);">Lv.${user.lvl}</b> ${user.name}</td>
+                    <td style="text-align:right; font-weight:bold; color:var(--gold);">${(user.xp || 0).toLocaleString()} XP</td>
+                </tr>`;
+            }).join('');
+        }
+
+        fetchRpgData();
+        setInterval(fetchRpgData, 30000);
+    </script>
+</body>
+</html>
