@@ -315,7 +315,7 @@
                 // 🌟 顯示對調：排行榜顯示 user.id (中文名)
                 return `<tr>
                     <td style="text-align:center;">${trophy}</td>
-                    <td>${icon} <b style="color:var(--gold);">Lv.${user.lvl}</b> ${user.id}</td>
+                    <td><span style="color:#888; font-size:0.85em;">${icon} ${user.job}</span> | <b style="color:var(--gold);">Lv.${user.lvl}</b> ${user.id}</td>
                     <td style="text-align:right;">${(user.xp || 0).toLocaleString()} XP</td>
                 </tr>`;
             }).join('');
