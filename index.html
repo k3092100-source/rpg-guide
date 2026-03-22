@@ -272,6 +272,7 @@
                         <div style="background: rgba(0, 212, 255, 0.1); padding: 15px; border-radius: 10px; border: 1px solid var(--neon-blue);">
                             <div style="font-size: 1.1em; color: var(--gold); font-weight: bold;">📜 勇者：${user.id}</div>
                             <div style="margin-top: 5px;">${icon} ${user.job} | Lv.${user.lvl} | <span class="highlight">${user.xp.toLocaleString()} XP</span></div>
+                            <div style="font-size: 0.9em; color: var(--neon-pink); margin-top: 5px; font-weight: bold;">🎖️ 稱號：${user.title || "無"}</div>
                             <div style="color: #888; font-size: 0.8em; margin-top: 5px;">帳號：${user.name}</div>
                         </div>`;
                 }
