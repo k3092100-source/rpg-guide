@@ -234,9 +234,17 @@
             <div id="search-result" style="display: none; margin-bottom: 20px;"></div>
 
             <div id="leaderboard-loading">名冊翻閱中...</div>
-            <table id="rank-table" class="rank-table" style="display:none;">
+            <table id="rank-table" class="rank-table" style="display:none; width: 100%; table-layout: fixed;">
+                <colgroup>
+                    <col style="width: 12%;"> <col style="width: 18%;"> <col style="width: 15%;"> <col style="width: 35%;"> <col style="width: 20%;"> </colgroup>
                 <thead>
-                    <tr><th>排名</th><th>勇者名稱</th><th style="text-align:right;">貢獻度 (XP)</th></tr>
+                    <tr>
+                        <th style="text-align:center;">排名</th>
+                        <th style="text-align:left;">職業</th>
+                        <th style="text-align:left;">等級</th>
+                        <th style="text-align:left;">勇者名稱</th>
+                        <th style="text-align:right;">貢獻度 (XP)</th>
+                    </tr>
                 </thead>
                 <tbody id="leaderboard-body"></tbody>
             </table>
@@ -459,7 +467,7 @@
         } catch (err) { resultBox.innerHTML = '連線超時。'; }
     }
 
-    // 🌟 排行榜顯示
+  // 🌟 排行榜顯示 (絕對對齊版)
     function renderLeaderboard(ranks) {
         const body = document.getElementById('leaderboard-body');
         body.innerHTML = ranks.slice(0, 20).map((user, index) => {
@@ -468,13 +476,14 @@
             let bigName = isChinese(user.id) ? user.id : (isChinese(user.name) ? user.name : user.id);
             let smallName = (bigName === user.id) ? user.name : user.id;
             
+            // 這裡把資料拆成 5 個 <td>，對應上面的 5 個標題
             return `<tr>
-                <td style="text-align:center;">${trophy}</td>
-                <td>
-                    <span style="color:#888; font-size:0.85em; margin-right:5px;">${icon} ${user.job}</span> 
-                    <b style="color:var(--gold); margin-right:10px;">Lv.${user.lvl}</b> 
-                    <span style="color:#fff; font-size:1.3em; font-weight:900; letter-spacing:1px;">${bigName}</span> 
-                    <span style="color:#555; font-size:0.8em; margin-left:8px;">(${smallName})</span>
+                <td style="text-align:center; font-size:1.2em;">${trophy}</td>
+                <td><span style="color:#888; font-size:0.95em;">${icon} ${user.job}</span></td>
+                <td><b style="color:var(--gold);">Lv.${user.lvl}</b></td>
+                <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    <span style="color:#fff; font-size:1.2em; font-weight:bold; letter-spacing:1px;">${bigName}</span> 
+                    <span style="color:#666; font-size:0.85em; margin-left:5px;">(${smallName})</span>
                 </td>
                 <td style="text-align:right; font-weight:bold; color:var(--gold); font-size:1.1em;">${(user.xp || 0).toLocaleString()} XP</td>
             </tr>`;
