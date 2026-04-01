@@ -265,7 +265,6 @@
         try {
             const response = await fetch(cloudUrl, { mode: 'cors' });
             const data = await response.json();
-            // 這裡會比對中文名(id)或英文帳號(name)
             const user = data.ranks.find(r => r.id.toLowerCase() === searchText || r.name.toLowerCase() === searchText);
             
             if (!user) {
@@ -284,7 +283,7 @@
                 resultBox.innerHTML = `
                     <div style="background: rgba(0, 212, 255, 0.05); padding: 20px; border-radius: 12px; border: 1px solid rgba(0, 212, 255, 0.3); position: relative;">
                         <div style="margin-bottom: 15px;">
-                            <span style="font-size: 1.6em; color: #fff; font-weight: 900;">勇者：${user.id}</span>
+                            <span style="font-size: 1.6em; color: #fff; font-weight: 900; text-shadow: 0 0 10px rgba(255,255,255,0.3);">勇者：${user.id}</span>
                             <span style="font-size: 0.9em; color: #666; margin-left: 8px;">(${user.name})</span>
                         </div>
                         
@@ -293,7 +292,7 @@
                             <div>⭐ 等級：<span style="color: #fff;">Lv.${user.lvl}</span></div>
                             <div style="grid-column: span 2;">✨ 經驗值：<span class="highlight">${(user.xp || 0).toLocaleString()} XP</span></div>
                         </div>
-                    </div>`;
+                        </div>`;
             }
         } catch (err) { resultBox.innerHTML = '連線失敗。'; }
     }
@@ -303,6 +302,7 @@
             const response = await fetch(cloudUrl, { mode: 'cors' });
             const data = await response.json();
             renderLeaderboard(data.ranks);
+            // 這裡負責魔王與燃燒邏輯
             const bossDisplay = document.getElementById('boss-display');
             if (bossTimerInterval) clearInterval(bossTimerInterval);
             if (data.boss && data.boss.targetTs > 0) {
@@ -328,7 +328,7 @@
 
     function renderLeaderboard(ranks) {
         const body = document.getElementById('leaderboard-body');
-        // 🌟 這裡控制只顯示前 20 名
+        // 🌟 這裡強制顯示前 20 名
         body.innerHTML = ranks.slice(0, 20).map((user, index) => {
             let trophy = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : (index + 1);
             let icon = jobIcons[user.job] || "🛡️";
