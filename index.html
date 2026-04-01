@@ -122,9 +122,10 @@
         .enhanced-title-label { font-size: 1.1em; color: #fff; margin-bottom: 15px; display: flex; align-items: center; }
         .enhanced-title-label::before { content: '🏆'; margin-right: 10px; font-size: 1.3em; }
         .enhanced-title-tags { display: flex; flex-wrap: wrap; gap: 10px; }
-        .enhanced-title-tag { padding: 8px 15px; background: rgba(20, 20, 20, 0.8); border-radius: 8px; border: 1px solid rgba(255, 215, 0, 0.15); color: var(--gold); font-size: 0.9em; cursor: default; position: relative; }
+        .enhanced-title-tag { padding: 8px 15px; background: rgba(20, 20, 20, 0.8); border-radius: 8px; border: 1px solid rgba(255, 215, 0, 0.15); color: var(--gold); font-size: 0.9em; transition: all 0.3s ease; cursor: default; position: relative; }
         .enhanced-title-tag:hover { background: rgba(20, 20, 20, 0.95); border-color: rgba(255, 215, 0, 0.4); transform: translateY(-3px); box-shadow: 0 5px 15px rgba(255, 215, 0, 0.1); }
         @keyframes fadeInUp { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
+        @keyframes neonOutline { 0% { border-color: rgba(255, 215, 0, 0.05); } 100% { border-color: rgba(255, 215, 0, 0.2); } }
     </style>
 </head>
 <body>
@@ -320,6 +321,7 @@
             let bigName = isChinese(user.id) ? user.id : (isChinese(user.name) ? user.name : user.id);
             let smallName = (bigName === user.id) ? user.name : user.id;
             
+            // 這裡把資料拆成 5 個 <td>，對應上面的 5 個標題
             return `<tr>
                 <td style="text-align:center; font-size:1.2em;">${trophy}</td>
                 <td><span style="color:#888; font-size:0.95em;">${icon} ${user.job}</span></td>
@@ -343,6 +345,7 @@
             const bossDisplay = document.getElementById('boss-display');
             if (data.boss && data.boss.targetTs > 0) {
                 if (bossTimerInterval) clearInterval(bossTimerInterval);
+                bossDisplay.style.color = "#ff4d4d"; // 魔王出現時亮紅色
                 bossTimerInterval = setInterval(() => {
                     const distance = data.boss.targetTs - new Date().getTime();
                     if (distance <= 0) { bossDisplay.innerText = "魔王降臨中！"; clearInterval(bossTimerInterval); }
@@ -352,7 +355,12 @@
                         bossDisplay.innerText = `👹 魔王 ⏳ ${m}:${s.toString().padStart(2,'0')}`;
                     }
                 }, 1000);
+            } else {
+                if (bossTimerInterval) clearInterval(bossTimerInterval);
+                bossDisplay.innerText = "💤 目前無魔王蹤跡";
+                bossDisplay.style.color = "#888"; 
             }
+
             const burnDisplay = document.getElementById('burn-display');
             burnDisplay.innerText = data.burning === "ON" ? "10倍燃燒中！" : "一般模式";
             burnDisplay.style.color = data.burning === "ON" ? "#ff00ff" : "#888";
@@ -360,7 +368,7 @@
             document.getElementById('rank-table').style.display = 'table';
         } catch (err) { 
             console.error("抓取失敗", err); 
-            document.getElementById('boss-display').innerText = '連線失敗';
+            document.getElementById('boss-display').innerText = '連線失敗(請檢查GAS權限)';
             document.getElementById('burn-display').innerText = '連線失敗';
         }
     }
