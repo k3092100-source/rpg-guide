@@ -265,6 +265,7 @@
             try {
                 const response = await fetch(cloudUrl, { mode: 'cors' });
                 const data = await response.json();
+                // 這裡比對 id 或 name 都可以找到人
                 const user = data.ranks.find(r => r.id.toLowerCase() === searchText || r.name.toLowerCase() === searchText);
                 
                 if (!user) {
