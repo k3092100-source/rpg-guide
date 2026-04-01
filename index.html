@@ -248,7 +248,7 @@
         </div>
     </div>
 
-   <script>
+<script>
         const cloudUrl = 'https://script.google.com/macros/s/AKfycbyI6ZlONHRQDp2Ts8OgDrOrHpAW16wQlXLupC2CT-i0-ck7XTo-ZAHmo2luYY13LNLwUQ/exec';
         const jobIcons = { "戰士": "⚔️", "狂戰士": "🔥", "弓箭手": "🏹", "神射手": "🍃", "刺客": "💀", "影之殺手": "🌚", "商人": "💰", "大亨": "💎", "初心者": "🛡️" };
 
@@ -265,7 +265,6 @@
             try {
                 const response = await fetch(cloudUrl, { mode: 'cors' });
                 const data = await response.json();
-                // 🔍 修正：同時比對 id(中文名) 與 name(英文帳號)
                 const user = data.ranks.find(r => r.id.toLowerCase() === searchText || r.name.toLowerCase() === searchText);
                 
                 if (!user) {
@@ -275,8 +274,6 @@
                     const flyCount = parseInt(user.fly) || 0;
                     const flyPct = Math.min((flyCount / 20) * 100, 100);
                     const flyBarColor = flyCount >= 20 ? 'var(--neon-pink)' : 'var(--neon-blue)';
-                    
-                    // 🌟 稱號分隔符號修正為 / 
                     const titlesArray = user.allTitles ? user.allTitles.split(' / ') : (user.title ? [user.title] : []);
                     const badgesHTML = titlesArray.map(t => {
                         const isEquipped = t.trim() === user.title.trim();
@@ -285,7 +282,10 @@
 
                     resultBox.innerHTML = `
                         <div style="background: rgba(0, 212, 255, 0.05); padding: 20px; border-radius: 12px; border: 1px solid rgba(0, 212, 255, 0.3); position: relative;">
-                            <div style="font-size: 1.2em; color: var(--gold); font-weight: bold; margin-bottom: 10px;">📜 勇者：${user.id} <span style="font-size: 0.7em; color: #666; font-weight: normal;">(${user.name})</span></div>
+                            <div style="margin-bottom: 15px;">
+                                <span style="font-size: 1.6em; color: #fff; font-weight: 900; text-shadow: 0 0 10px rgba(255,255,255,0.3);">勇者：${user.id}</span>
+                                <span style="font-size: 0.9em; color: #666; margin-left: 8px;">(${user.name})</span>
+                            </div>
                             
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
                                 <div>${icon} 職業：<span style="color: #fff;">${user.job}</span></div>
@@ -305,9 +305,7 @@
 
                             <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
                                 <div style="font-size: 0.9em; color: var(--neon-pink); margin-bottom: 8px; font-weight: bold;">🎖️ 已解鎖稱號勳章</div>
-                                <div style="display: flex; flex-wrap: wrap;">
-                                    ${badgesHTML || '<span style="color:#555;">尚無成就</span>'}
-                                </div>
+                                <div style="display: flex; flex-wrap: wrap;">${badgesHTML || '<span style="color:#555;">尚無成就</span>'}</div>
                             </div>
                         </div>`;
                 }
@@ -342,22 +340,21 @@
             } catch (err) { console.error(err); }
         }
 
-       function renderLeaderboard(ranks) {
+        function renderLeaderboard(ranks) {
             const body = document.getElementById('leaderboard-body');
             body.innerHTML = ranks.slice(0, 100).map((user, index) => {
                 let trophy = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : (index + 1);
                 let icon = jobIcons[user.job] || "🛡️";
                 
-                // 🌟 阿智二號修正：中文名(user.id) 放大放在前面，帳號(user.name) 縮小放後面
                 return `<tr>
                     <td style="text-align:center;">${trophy}</td>
                     <td>
-                        <span style="color:#888; font-size:0.85em;">${icon} ${user.job}</span> | 
-                        <b style="color:var(--gold);">Lv.${user.lvl}</b> 
-                        <span style="color:#fff; font-size:1.1em; font-weight:bold; margin-left:5px;">${user.id}</span> 
-                        <span style="color:#555; font-size:0.8em; margin-left:5px;">(${user.name})</span>
+                        <span style="color:#888; font-size:0.85em; margin-right:5px;">${icon} ${user.job}</span> 
+                        <b style="color:var(--gold); margin-right:10px;">Lv.${user.lvl}</b> 
+                        <span style="color:#fff; font-size:1.3em; font-weight:900; letter-spacing:1px;">${user.id}</span> 
+                        <span style="color:#555; font-size:0.8em; margin-left:8px;">(${user.name})</span>
                     </td>
-                    <td style="text-align:right; font-weight:bold; color:var(--gold);">${(user.xp || 0).toLocaleString()} XP</td>
+                    <td style="text-align:right; font-weight:bold; color:var(--gold); font-size:1.1em;">${(user.xp || 0).toLocaleString()} XP</td>
                 </tr>`;
             }).join('');
         }
