@@ -246,97 +246,92 @@
             製作人：萌萌吃吃 &nbsp; | &nbsp; 雲端數據同步中<br>
             * 若搜尋不到自己，請在實況間輸入 !RPG 重新同步數據 *
         </div>
-</div> <script>
-        // 🌟 確保 cloudUrl 正確
-        const cloudUrl = 'https://script.google.com/macros/s/AKfycbyI6ZlONHRQDp2Ts8OgDrOrHpAW16wQlXLupC2CT-i0-ck7XTo-ZAHmo2luYY13LNLwUQ/exec';
-        const jobIcons = { "戰士": "⚔️", "狂戰士": "🔥", "弓箭手": "🏹", "神射手": "🍃", "刺客": "💀", "影之殺手": "🌚", "商人": "💰", "大亨": "💎", "初心者": "🛡️" };
+</div><script>
+    const cloudUrl = 'https://script.google.com/macros/s/AKfycbyI6ZlONHRQDp2Ts8OgDrOrHpAW16wQlXLupC2CT-i0-ck7XTo-ZAHmo2luYY13LNLwUQ/exec';
+    const jobIcons = { "戰士": "⚔️", "狂戰士": "🔥", "弓箭手": "🏹", "神射手": "🍃", "刺客": "💀", "影之殺手": "🌚", "商人": "💰", "大亨": "💎", "初心者": "🛡️" };
+    let bossTimerInterval; 
 
-        let bossTimerInterval; 
+    // 🌟 搜尋功能修正：確保搜尋結果大字也是中文
+    async function searchUser() {
+        const searchText = document.getElementById('search-input').value.trim().toLowerCase();
+        const resultBox = document.getElementById('search-result');
+        if (!searchText) return;
+        resultBox.style.display = 'block';
+        resultBox.innerHTML = '<span style="color: #888;">正在翻閱名冊...</span>';
+        try {
+            const response = await fetch(cloudUrl);
+            const data = await response.json();
+            const user = data.ranks.find(r => r.id.toLowerCase() === searchText || r.name.toLowerCase() === searchText);
+            
+            if (!user) {
+                resultBox.innerHTML = `<span style="color: #ff4d4d;">❌ 找不到 "${searchText}"。</span>`;
+            } else {
+                const icon = jobIcons[user.job] || "🛡️";
+                // 這裡強行對位：user.id 是中文，user.name 是英文
+                resultBox.innerHTML = `
+                    <div style="background: rgba(0, 212, 255, 0.05); padding: 20px; border-radius: 12px; border: 1px solid rgba(0, 212, 255, 0.3);">
+                        <div style="margin-bottom: 15px;">
+                            <span style="font-size: 1.6em; color: #fff; font-weight: 900;">勇者：${user.id}</span>
+                            <span style="font-size: 0.9em; color: #666; margin-left: 8px;">(${user.name})</span>
+                        </div>
+                        <div style="color:#eee;">等級：Lv.${user.lvl} | 職業：${icon} ${user.job}</div>
+                    </div>`;
+            }
+        } catch (err) { resultBox.innerHTML = '連線超時。'; }
+    }
 
-        // 🌟 搜尋功能：大字強制抓 id
-        async function searchUser() {
-            const searchText = document.getElementById('search-input').value.trim().toLowerCase();
-            const resultBox = document.getElementById('search-result');
-            if (!searchText) return;
-            resultBox.style.display = 'block';
-            resultBox.innerHTML = '<span style="color: #888;">正在翻閱名冊...</span>';
-            try {
-                const response = await fetch(cloudUrl);
-                const data = await response.json();
-                const user = data.ranks.find(r => r.id.toLowerCase() === searchText || r.name.toLowerCase() === searchText);
-                if (!user) {
-                    resultBox.innerHTML = `<span style="color: #ff4d4d;">❌ 找不到 "${searchText}"。</span>`;
-                } else {
-                    const icon = jobIcons[user.job] || "🛡️";
-                    resultBox.innerHTML = `
-                        <div style="background: rgba(0, 212, 255, 0.05); padding: 20px; border-radius: 12px; border: 1px solid rgba(0, 212, 255, 0.3);">
-                            <div style="margin-bottom: 15px;">
-                                <span style="font-size: 1.6em; color: #fff; font-weight: 900;">勇者：${user.id}</span>
-                                <span style="font-size: 0.9em; color: #666; margin-left: 8px;">(${user.name})</span>
-                            </div>
-                            <div style="color:#eee;">等級：Lv.${user.lvl} | 職業：${icon} ${user.job}</div>
-                        </div>`;
-                }
-            } catch (err) { resultBox.innerHTML = '連線超時。'; }
-        }
+    async function fetchRpgData() {
+        try {
+            const response = await fetch(cloudUrl);
+            const data = await response.json();
+            renderLeaderboard(data.ranks);
+            
+            // 狀態顯示更新
+            const bossDisplay = document.getElementById('boss-display');
+            if (data.boss && data.boss.targetTs > 0) {
+                if (bossTimerInterval) clearInterval(bossTimerInterval);
+                bossTimerInterval = setInterval(() => {
+                    const distance = data.boss.targetTs - new Date().getTime();
+                    if (distance <= 0) { bossDisplay.innerText = "魔王降臨中！"; clearInterval(bossTimerInterval); }
+                    else {
+                        const m = Math.floor((distance % 3600000) / 60000);
+                        const s = Math.floor((distance % 60000) / 1000);
+                        bossDisplay.innerText = `👹 魔王 ⏳ ${m}:${s.toString().padStart(2,'0')}`;
+                    }
+                }, 1000);
+            }
+            const burnDisplay = document.getElementById('burn-display');
+            burnDisplay.innerText = data.burning === "ON" ? "10倍燃燒中！" : "一般模式";
+            burnDisplay.style.color = data.burning === "ON" ? "#ff00ff" : "#888";
+            document.getElementById('leaderboard-loading').style.display = 'none';
+            document.getElementById('rank-table').style.display = 'table';
+        } catch (err) { console.error("抓取失敗", err); }
+    }
 
-        async function fetchRpgData() {
-            try {
-                const response = await fetch(cloudUrl);
-                const data = await response.json();
-                renderLeaderboard(data.ranks);
-                
-                // 狀態顯示更新
-                const bossDisplay = document.getElementById('boss-display');
-                if (data.boss && data.boss.targetTs > 0) {
-                    if (bossTimerInterval) clearInterval(bossTimerInterval);
-                    bossTimerInterval = setInterval(() => {
-                        const distance = data.boss.targetTs - new Date().getTime();
-                        if (distance <= 0) { bossDisplay.innerText = "魔王降臨中！"; clearInterval(bossTimerInterval); }
-                        else {
-                            const m = Math.floor((distance % 3600000) / 60000);
-                            const s = Math.floor((distance % 60000) / 1000);
-                            bossDisplay.innerText = `👹 魔王 ⏳ ${m}:${s.toString().padStart(2,'0')}`;
-                        }
-                    }, 1000);
-                }
-                const burnDisplay = document.getElementById('burn-display');
-                burnDisplay.innerText = data.burning === "ON" ? "10倍燃燒中！" : "一般模式";
-                burnDisplay.style.color = data.burning === "ON" ? "#ff00ff" : "#888";
-                document.getElementById('leaderboard-loading').style.display = 'none';
-                document.getElementById('rank-table').style.display = 'table';
-            } catch (err) { console.error("抓取失敗", err); }
-        }
+    // 🌟 排行榜修正：鎖定 user.id 顯示在大字位置
+    function renderLeaderboard(ranks) {
+        const body = document.getElementById('leaderboard-body');
+        body.innerHTML = ranks.slice(0, 20).map((user, index) => {
+            let trophy = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : (index + 1);
+            let icon = jobIcons[user.job] || "🛡️";
+            
+            return `<tr>
+                <td style="text-align:center;">${trophy}</td>
+                <td>
+                    <span style="color:#888; font-size:0.85em; margin-right:5px;">${icon} ${user.job}</span> 
+                    <b style="color:var(--gold); margin-right:10px;">Lv.${user.lvl}</b> 
+                    
+                    <span style="color:#fff; font-size:1.3em; font-weight:900; letter-spacing:1px;">${user.id}</span> 
+                    
+                    <span style="color:#555; font-size:0.8em; margin-left:8px;">(${user.name})</span>
+                </td>
+                <td style="text-align:right; font-weight:bold; color:var(--gold); font-size:1.1em;">${(user.xp || 0).toLocaleString()} XP</td>
+            </tr>`;
+        }).join('');
+    }
 
-// 🌟 排行榜：精準對齊中文名與英文帳號
-        function renderLeaderboard(ranks) {
-            const body = document.getElementById('leaderboard-body');
-            // 只顯示前 20 名
-            body.innerHTML = ranks.slice(0, 20).map((user, index) => {
-                let trophy = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : (index + 1);
-                let icon = jobIcons[user.job] || "🛡️";
-                
-                // 💡 邏輯拆解：
-                // user.id 來自 Google 腳本的 allPlayers[j][1] (B欄中文)
-                // user.name 來自 Google 腳本的 allPlayers[j][0] (A欄英文)
-                
-                return `<tr>
-                    <td style="text-align:center;">${trophy}</td>
-                    <td>
-                        <span style="color:#888; font-size:0.85em; margin-right:5px;">${icon} ${user.job}</span> 
-                        <b style="color:var(--gold); margin-right:10px;">Lv.${user.lvl}</b> 
-                        
-                        <span style="color:#fff; font-size:1.3em; font-weight:900; letter-spacing:1px;">${user.id}</span> 
-                        
-                        <span style="color:#555; font-size:0.8em; margin-left:8px;">(${user.name})</span>
-                    </td>
-                    <td style="text-align:right; font-weight:bold; color:var(--gold); font-size:1.1em;">${(user.xp || 0).toLocaleString()} XP</td>
-                </tr>`;
-            }).join('');
-        }
-
-        fetchRpgData();
-        setInterval(fetchRpgData, 30000);
-    </script>
+    fetchRpgData();
+    setInterval(fetchRpgData, 30000);
+</script>
 </body>
 </html>
