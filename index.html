@@ -342,20 +342,22 @@
             } catch (err) { console.error(err); }
         }
 
-        function renderLeaderboard(ranks) {
+       function renderLeaderboard(ranks) {
             const body = document.getElementById('leaderboard-body');
             body.innerHTML = ranks.slice(0, 100).map((user, index) => {
                 let trophy = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : (index + 1);
                 let icon = jobIcons[user.job] || "🛡️";
-                // 🌟 排行榜顯示 user.id (中文名)，並附帶小字帳號
+                
+                // 🌟 阿智二號修正：中文名(user.id) 放大放在前面，帳號(user.name) 縮小放後面
                 return `<tr>
                     <td style="text-align:center;">${trophy}</td>
                     <td>
                         <span style="color:#888; font-size:0.85em;">${icon} ${user.job}</span> | 
-                        <b style="color:var(--gold);">Lv.${user.lvl}</b> ${user.id} 
-                        <span style="color:#444; font-size:0.8em;">(${user.name})</span>
+                        <b style="color:var(--gold);">Lv.${user.lvl}</b> 
+                        <span style="color:#fff; font-size:1.1em; font-weight:bold; margin-left:5px;">${user.id}</span> 
+                        <span style="color:#555; font-size:0.8em; margin-left:5px;">(${user.name})</span>
                     </td>
-                    <td style="text-align:right;">${(user.xp || 0).toLocaleString()} XP</td>
+                    <td style="text-align:right; font-weight:bold; color:var(--gold);">${(user.xp || 0).toLocaleString()} XP</td>
                 </tr>`;
             }).join('');
         }
