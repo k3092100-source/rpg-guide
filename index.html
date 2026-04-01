@@ -251,10 +251,10 @@
     const jobIcons = { "戰士": "⚔️", "狂戰士": "🔥", "弓箭手": "🏹", "神射手": "🍃", "刺客": "💀", "影之殺手": "🌚", "商人": "💰", "大亨": "💎", "初心者": "🛡️" };
     let bossTimerInterval; 
 
-    // 🏆 工具：自動檢查哪一個字串含有中文
+    // 🏆 工具：判斷中文字
     const isChinese = (str) => /[\u4e00-\u9fa5]/.test(str);
 
-    // 🌟 搜尋功能：自動判斷中文大名
+    // 🌟 搜尋功能：補回【非洲人次數】與【稱號展示】
     async function searchUser() {
         const searchText = document.getElementById('search-input').value.trim().toLowerCase();
         const resultBox = document.getElementById('search-result');
@@ -270,30 +270,42 @@
                 resultBox.innerHTML = `<span style="color: #ff4d4d;">❌ 找不到 "${searchText}"。</span>`;
             } else {
                 const icon = jobIcons[user.job] || "🛡️";
-                // 🔍 自動分配：bigName 放中文，smallName 放英文
+                // 判斷中英文顯示位
                 let bigName = isChinese(user.id) ? user.id : (isChinese(user.name) ? user.name : user.id);
                 let smallName = (bigName === user.id) ? user.name : user.id;
 
+                // 處理稱號清單：把逗號隔開的稱號變漂亮的標籤
+                const titleHtml = user.allTitles && user.allTitles !== "無" 
+                    ? user.allTitles.split(',').map(t => `<span style="background:rgba(255,215,0,0.1); color:var(--gold); padding:2px 8px; border-radius:4px; font-size:0.85em; margin-right:5px; border:1px solid rgba(255,215,0,0.3);">${t}</span>`).join('')
+                    : '<span style="color:#666;">尚無特殊稱號</span>';
+
                 resultBox.innerHTML = `
-                    <div style="background: rgba(0, 212, 255, 0.05); padding: 20px; border-radius: 12px; border: 1px solid rgba(0, 212, 255, 0.3);">
-                        <div style="margin-bottom: 15px;">
-                            <span style="font-size: 1.6em; color: #fff; font-weight: 900;">勇者：${bigName}</span>
-                            <span style="font-size: 0.9em; color: #666; margin-left: 8px;">(${smallName})</span>
+                    <div style="background: rgba(0, 212, 255, 0.05); padding: 25px; border-radius: 15px; border: 1px solid rgba(0, 212, 255, 0.3); box-shadow: 0 5px 20px rgba(0,0,0,0.3);">
+                        <div style="margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">
+                            <span style="font-size: 1.8em; color: #fff; font-weight: 900; letter-spacing:1px;">${bigName}</span>
+                            <span style="font-size: 1em; color: #666; margin-left: 8px;">(${smallName})</span>
                         </div>
-                        <div style="color:#eee;">等級：Lv.${user.lvl} | 職業：${icon} ${user.job}</div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; color:#eee; font-size: 1.1em;">
+                            <div>等級：<b style="color:var(--gold);">Lv.${user.lvl}</b></div>
+                            <div>職業：${icon} ${user.job}</div>
+                            <div>當前稱號：<span style="color:var(--neon-pink);">${user.title || "無"}</span></div>
+                            <div>👹 震飛次數：<b style="color:#ff4d4d;">${user.fly || 0}</b> 次</div>
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <div style="color: #888; font-size: 0.9em; margin-bottom: 8px;">🏆 擁有的榮耀里程碑：</div>
+                            <div style="display: flex; flex-wrap: wrap; gap: 5px;">${titleHtml}</div>
+                        </div>
                     </div>`;
             }
         } catch (err) { resultBox.innerHTML = '連線超時。'; }
     }
 
-    // 🌟 排行榜顯示：自動識別中文放大
+    // 🌟 排行榜顯示
     function renderLeaderboard(ranks) {
         const body = document.getElementById('leaderboard-body');
         body.innerHTML = ranks.slice(0, 20).map((user, index) => {
             let trophy = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : (index + 1);
             let icon = jobIcons[user.job] || "🛡️";
-            
-            // 🔍 自動分配：bigName 放中文，smallName 放英文
             let bigName = isChinese(user.id) ? user.id : (isChinese(user.name) ? user.name : user.id);
             let smallName = (bigName === user.id) ? user.name : user.id;
             
