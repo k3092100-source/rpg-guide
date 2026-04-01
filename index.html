@@ -251,7 +251,10 @@
     const jobIcons = { "戰士": "⚔️", "狂戰士": "🔥", "弓箭手": "🏹", "神射手": "🍃", "刺客": "💀", "影之殺手": "🌚", "商人": "💰", "大亨": "💎", "初心者": "🛡️" };
     let bossTimerInterval; 
 
-    // 🌟 搜尋功能修正：確保搜尋結果大字也是中文
+    // 🏆 工具：自動檢查哪一個字串含有中文
+    const isChinese = (str) => /[\u4e00-\u9fa5]/.test(str);
+
+    // 🌟 搜尋功能：自動判斷中文大名
     async function searchUser() {
         const searchText = document.getElementById('search-input').value.trim().toLowerCase();
         const resultBox = document.getElementById('search-result');
@@ -267,17 +270,44 @@
                 resultBox.innerHTML = `<span style="color: #ff4d4d;">❌ 找不到 "${searchText}"。</span>`;
             } else {
                 const icon = jobIcons[user.job] || "🛡️";
-                // 這裡強行對位：user.id 是中文，user.name 是英文
+                // 🔍 自動分配：bigName 放中文，smallName 放英文
+                let bigName = isChinese(user.id) ? user.id : (isChinese(user.name) ? user.name : user.id);
+                let smallName = (bigName === user.id) ? user.name : user.id;
+
                 resultBox.innerHTML = `
                     <div style="background: rgba(0, 212, 255, 0.05); padding: 20px; border-radius: 12px; border: 1px solid rgba(0, 212, 255, 0.3);">
                         <div style="margin-bottom: 15px;">
-                            <span style="font-size: 1.6em; color: #fff; font-weight: 900;">勇者：${user.id}</span>
-                            <span style="font-size: 0.9em; color: #666; margin-left: 8px;">(${user.name})</span>
+                            <span style="font-size: 1.6em; color: #fff; font-weight: 900;">勇者：${bigName}</span>
+                            <span style="font-size: 0.9em; color: #666; margin-left: 8px;">(${smallName})</span>
                         </div>
                         <div style="color:#eee;">等級：Lv.${user.lvl} | 職業：${icon} ${user.job}</div>
                     </div>`;
             }
         } catch (err) { resultBox.innerHTML = '連線超時。'; }
+    }
+
+    // 🌟 排行榜顯示：自動識別中文放大
+    function renderLeaderboard(ranks) {
+        const body = document.getElementById('leaderboard-body');
+        body.innerHTML = ranks.slice(0, 20).map((user, index) => {
+            let trophy = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : (index + 1);
+            let icon = jobIcons[user.job] || "🛡️";
+            
+            // 🔍 自動分配：bigName 放中文，smallName 放英文
+            let bigName = isChinese(user.id) ? user.id : (isChinese(user.name) ? user.name : user.id);
+            let smallName = (bigName === user.id) ? user.name : user.id;
+            
+            return `<tr>
+                <td style="text-align:center;">${trophy}</td>
+                <td>
+                    <span style="color:#888; font-size:0.85em; margin-right:5px;">${icon} ${user.job}</span> 
+                    <b style="color:var(--gold); margin-right:10px;">Lv.${user.lvl}</b> 
+                    <span style="color:#fff; font-size:1.3em; font-weight:900; letter-spacing:1px;">${bigName}</span> 
+                    <span style="color:#555; font-size:0.8em; margin-left:8px;">(${smallName})</span>
+                </td>
+                <td style="text-align:right; font-weight:bold; color:var(--gold); font-size:1.1em;">${(user.xp || 0).toLocaleString()} XP</td>
+            </tr>`;
+        }).join('');
     }
 
     async function fetchRpgData() {
@@ -286,7 +316,6 @@
             const data = await response.json();
             renderLeaderboard(data.ranks);
             
-            // 狀態顯示更新
             const bossDisplay = document.getElementById('boss-display');
             if (data.boss && data.boss.targetTs > 0) {
                 if (bossTimerInterval) clearInterval(bossTimerInterval);
@@ -306,28 +335,6 @@
             document.getElementById('leaderboard-loading').style.display = 'none';
             document.getElementById('rank-table').style.display = 'table';
         } catch (err) { console.error("抓取失敗", err); }
-    }
-
-    // 🌟 排行榜修正：鎖定 user.id 顯示在大字位置
-    function renderLeaderboard(ranks) {
-        const body = document.getElementById('leaderboard-body');
-        body.innerHTML = ranks.slice(0, 20).map((user, index) => {
-            let trophy = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : (index + 1);
-            let icon = jobIcons[user.job] || "🛡️";
-            
-            return `<tr>
-                <td style="text-align:center;">${trophy}</td>
-                <td>
-                    <span style="color:#888; font-size:0.85em; margin-right:5px;">${icon} ${user.job}</span> 
-                    <b style="color:var(--gold); margin-right:10px;">Lv.${user.lvl}</b> 
-                    
-                    <span style="color:#fff; font-size:1.3em; font-weight:900; letter-spacing:1px;">${user.id}</span> 
-                    
-                    <span style="color:#555; font-size:0.8em; margin-left:8px;">(${user.name})</span>
-                </td>
-                <td style="text-align:right; font-weight:bold; color:var(--gold); font-size:1.1em;">${(user.xp || 0).toLocaleString()} XP</td>
-            </tr>`;
-        }).join('');
     }
 
     fetchRpgData();
