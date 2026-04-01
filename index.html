@@ -308,7 +308,7 @@
             } catch (err) { console.error("抓取失敗", err); }
         }
 
-        // 🌟 排行榜：這裡我強制把 user.id 給大字樣式
+// 🌟 排行榜：精準對齊中文名與英文帳號
         function renderLeaderboard(ranks) {
             const body = document.getElementById('leaderboard-body');
             // 只顯示前 20 名
@@ -316,12 +316,18 @@
                 let trophy = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : (index + 1);
                 let icon = jobIcons[user.job] || "🛡️";
                 
+                // 💡 邏輯拆解：
+                // user.id 來自 Google 腳本的 allPlayers[j][1] (B欄中文)
+                // user.name 來自 Google 腳本的 allPlayers[j][0] (A欄英文)
+                
                 return `<tr>
                     <td style="text-align:center;">${trophy}</td>
                     <td>
                         <span style="color:#888; font-size:0.85em; margin-right:5px;">${icon} ${user.job}</span> 
                         <b style="color:var(--gold); margin-right:10px;">Lv.${user.lvl}</b> 
+                        
                         <span style="color:#fff; font-size:1.3em; font-weight:900; letter-spacing:1px;">${user.id}</span> 
+                        
                         <span style="color:#555; font-size:0.8em; margin-left:8px;">(${user.name})</span>
                     </td>
                     <td style="text-align:right; font-weight:bold; color:var(--gold); font-size:1.1em;">${(user.xp || 0).toLocaleString()} XP</td>
