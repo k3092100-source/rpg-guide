@@ -268,32 +268,191 @@
             
             if (!user) {
                 resultBox.innerHTML = `<span style="color: #ff4d4d;">❌ 找不到 "${searchText}"。</span>`;
-            } else {
+} else {
                 const icon = jobIcons[user.job] || "🛡️";
                 // 判斷中英文顯示位
                 let bigName = isChinese(user.id) ? user.id : (isChinese(user.name) ? user.name : user.id);
                 let smallName = (bigName === user.id) ? user.name : user.id;
 
-                // 處理稱號清單：把逗號隔開的稱號變漂亮的標籤
-                const titleHtml = user.allTitles && user.allTitles !== "無" 
-                    ? user.allTitles.split(',').map(t => `<span style="background:rgba(255,215,0,0.1); color:var(--gold); padding:2px 8px; border-radius:4px; font-size:0.85em; margin-right:5px; border:1px solid rgba(255,215,0,0.3);">${t}</span>`).join('')
-                    : '<span style="color:#666;">尚無特殊稱號</span>';
+                // 🌟 美術加強：處理稱號清單
+                const titleTags = user.allTitles && user.allTitles !== "無" 
+                    ? user.allTitles.split(',').map(t => `<span class="enhanced-title-tag">${t}</span>`).join('')
+                    : '<span style="color:#666; font-style:italic;">尚無特殊里程碑</span>';
 
                 resultBox.innerHTML = `
-                    <div style="background: rgba(0, 212, 255, 0.05); padding: 25px; border-radius: 15px; border: 1px solid rgba(0, 212, 255, 0.3); box-shadow: 0 5px 20px rgba(0,0,0,0.3);">
-                        <div style="margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">
-                            <span style="font-size: 1.8em; color: #fff; font-weight: 900; letter-spacing:1px;">${bigName}</span>
-                            <span style="font-size: 1em; color: #666; margin-left: 8px;">(${smallName})</span>
+                    <style>
+                        /* 搜尋結果美術加強樣式 */
+                        .enhanced-result-box {
+                            background: rgba(20, 20, 20, 0.95);
+                            padding: 40px;
+                            border-radius: 20px;
+                            border: 2px solid rgba(255, 255, 255, 0.05);
+                            position: relative;
+                            overflow: hidden;
+                            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.9), inset 0 0 10px rgba(255, 215, 0, 0.1);
+                            backdrop-filter: blur(15px);
+                            animation: fadeInUp 0.5s ease-out;
+                        }
+
+                        .enhanced-result-box::before {
+                            content: '';
+                            position: absolute;
+                            top: -50%;
+                            left: -50%;
+                            width: 200%;
+                            height: 200%;
+                            background: url('path/to/texture.png') repeat; /* 可選微弱科技紋理 */
+                            opacity: 0.03;
+                            pointer-events: none;
+                        }
+
+                        .enhanced-hero-header {
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            margin-bottom: 25px;
+                            padding-bottom: 20px;
+                            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                        }
+
+                        .enhanced-hero-name {
+                            font-size: 2.2em;
+                            font-weight: 900;
+                            background: linear-gradient(to bottom, #fff 0%, #aaa 100%);
+                            -webkit-background-clip: text;
+                            -webkit-text-fill-color: transparent;
+                            text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+                        }
+
+                        .enhanced-hero-id {
+                            font-size: 0.9em;
+                            color: #666;
+                            font-weight: normal;
+                            -webkit-text-fill-color: #666; /* 覆蓋漸變 */
+                        }
+
+                        .enhanced-status-grid {
+                            display: grid;
+                            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                            gap: 20px;
+                            margin-bottom: 30px;
+                        }
+
+                        .enhanced-status-item {
+                            background: rgba(255, 255, 255, 0.03);
+                            padding: 15px;
+                            border-radius: 12px;
+                            border: 1px solid rgba(255, 255, 255, 0.05);
+                            text-align: center;
+                            transition: transform 0.3s ease;
+                        }
+
+                        .enhanced-status-item:hover {
+                            transform: scale(1.05);
+                        }
+
+                        .enhanced-status-label {
+                            font-size: 0.85em;
+                            color: #888;
+                            margin-bottom: 5px;
+                        }
+
+                        .enhanced-status-val {
+                            font-size: 1.2em;
+                            font-weight: bold;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                        }
+
+                        .enhanced-gold { color: var(--gold); }
+                        .enhanced-pink { color: var(--neon-pink); }
+                        .enhanced-red { color: #ff4d4d; }
+
+                        .enhanced-title-wall {
+                            margin-top: 30px;
+                        }
+
+                        .enhanced-title-label {
+                            font-size: 1.1em;
+                            color: #fff;
+                            margin-bottom: 15px;
+                            display: flex;
+                            align-items: center;
+                        }
+
+                        .enhanced-title-label::before { content: '🏆'; margin-right: 10px; font-size: 1.3em; }
+
+                        .enhanced-title-tags {
+                            display: flex;
+                            flex-wrap: wrap;
+                            gap: 10px;
+                        }
+
+                        .enhanced-title-tag {
+                            padding: 8px 15px;
+                            background: rgba(20, 20, 20, 0.8);
+                            border-radius: 8px;
+                            border: 1px solid rgba(255, 215, 0, 0.15);
+                            color: var(--gold);
+                            font-size: 0.9em;
+                            transition: all 0.3s ease;
+                            cursor: default;
+                            position: relative;
+                        }
+
+                        .enhanced-title-tag:hover {
+                            background: rgba(20, 20, 20, 0.95);
+                            border-color: rgba(255, 215, 0, 0.4);
+                            transform: translateY(-3px);
+                            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.1);
+                        }
+
+                        .enhanced-title-tag::before {
+                            content: '';
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            width: 100%;
+                            height: 100%;
+                            border-radius: 8px;
+                            border: 1px solid rgba(255, 215, 0, 0.05);
+                            animation: neonOutline 2s infinite alternate;
+                        }
+
+                        @keyframes fadeInUp { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
+                        @keyframes neonOutline { 0% { border-color: rgba(255, 215, 0, 0.05); } 100% { border-color: rgba(255, 215, 0, 0.2); } }
+                    </style>
+
+                    <div class="enhanced-result-box">
+                        <div class="enhanced-hero-header">
+                            <div>
+                                <span class="enhanced-hero-name">${bigName}</span>
+                                <span class="enhanced-hero-id">(${smallName})</span>
+                            </div>
+                            <span style="font-size: 1.3em;">${equippedTitle == "無" ? "" : '<span class="enhanced-pink">'+equippedTitle+'</span>'}</span>
                         </div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; color:#eee; font-size: 1.1em;">
-                            <div>等級：<b style="color:var(--gold);">Lv.${user.lvl}</b></div>
-                            <div>職業：${icon} ${user.job}</div>
-                            <div>當前稱號：<span style="color:var(--neon-pink);">${user.title || "無"}</span></div>
-                            <div>👹 震飛次數：<b style="color:#ff4d4d;">${user.fly || 0}</b> 次</div>
+
+                        <div class="enhanced-status-grid">
+                            <div class="enhanced-status-item">
+                                <div class="enhanced-status-label">等級</div>
+                                <div class="enhanced-status-val enhanced-gold">Lv.${user.lvl}</div>
+                            </div>
+                            <div class="enhanced-status-item">
+                                <div class="enhanced-status-label">職業</div>
+                                <div class="enhanced-status-val">${icon} ${user.job}</div>
+                            </div>
+                            <div class="enhanced-status-item">
+                                <div class="enhanced-status-label">👹 震飛次數</div>
+                                <div class="enhanced-status-val enhanced-red">${user.fly || 0} 次</div>
+                            </div>
                         </div>
-                        <div style="margin-top: 15px;">
-                            <div style="color: #888; font-size: 0.9em; margin-bottom: 8px;">🏆 擁有的榮耀里程碑：</div>
-                            <div style="display: flex; flex-wrap: wrap; gap: 5px;">${titleHtml}</div>
+
+                        <div class="enhanced-title-wall">
+                            <div class="enhanced-title-label">擁有的榮耀里程碑</div>
+                            <div class="enhanced-title-tags">
+                                ${titleTags}
+                            </div>
                         </div>
                     </div>`;
             }
