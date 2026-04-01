@@ -343,7 +343,7 @@
 
         function renderLeaderboard(ranks) {
             const body = document.getElementById('leaderboard-body');
-            body.innerHTML = ranks.slice(0, 100).map((user, index) => {
+            body.innerHTML = ranks.slice(0, 20).map((user, index) => {
                 let trophy = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : (index + 1);
                 let icon = jobIcons[user.job] || "🛡️";
                 
