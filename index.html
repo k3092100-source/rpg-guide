@@ -126,6 +126,37 @@
         .enhanced-title-tag:hover { background: rgba(20, 20, 20, 0.95); border-color: rgba(255, 215, 0, 0.4); transform: translateY(-3px); box-shadow: 0 5px 15px rgba(255, 215, 0, 0.1); }
         @keyframes fadeInUp { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
         @keyframes neonOutline { 0% { border-color: rgba(255, 215, 0, 0.05); } 100% { border-color: rgba(255, 215, 0, 0.2); } }
+
+        /* 📊 [新增] 經驗值長條圖樣式 */
+        .xp-progress-container {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            border-radius: 15px;
+            height: 20px;
+            margin-top: 10px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+        }
+        .xp-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff8c00, var(--gold));
+            width: 0%;
+            transition: width 1.2s cubic-bezier(0.1, 0.7, 1.0, 0.1);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+        .xp-progress-text {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            font-size: 11px;
+            line-height: 20px;
+            color: #fff;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px #000;
+            z-index: 2;
+        }
     </style>
 </head>
 <body>
@@ -257,6 +288,18 @@
 
     const isChinese = (str) => /[\u4e00-\u9fa5]/.test(str);
 
+    // 🌟 [新增] 經驗值公式邏輯
+    function calculateXpProgress(lv, xp) {
+        if (lv >= 100) return { percent: 100, next: "MAX" };
+        let req = 50;
+        if (lv < 15) req = 50;
+        else if (lv < 50) req = 500 + ((lv - 15 + 1) * 150);
+        else req = 4500 + ((lv - 50 + 1) * 250);
+        
+        let percent = Math.min((xp / req) * 100, 100).toFixed(1);
+        return { percent, next: req };
+    }
+
     // 🌟 搜尋個人成就功能 (美術加強版)
     async function searchUser() {
         const searchText = document.getElementById('search-input').value.trim().toLowerCase();
@@ -280,6 +323,9 @@
                     ? user.allTitles.split(',').map(t => `<span class="enhanced-title-tag">${t}</span>`).join('')
                     : '<span style="color:#666; font-style:italic;">尚無特殊里程碑</span>';
 
+                // 🌟 [新增] 計算經驗條資料
+                const progress = calculateXpProgress(user.lvl, user.xp);
+
                 resultBox.innerHTML = `
                     <div class="enhanced-result-box">
                         <div class="enhanced-hero-header">
@@ -293,6 +339,10 @@
                             <div class="enhanced-status-item">
                                 <div class="enhanced-status-label">等級</div>
                                 <div class="enhanced-status-val enhanced-gold">Lv.${user.lvl}</div>
+                                <div class="xp-progress-container">
+                                    <div class="xp-progress-fill" style="width: ${progress.percent}%"></div>
+                                    <div class="xp-progress-text">${user.xp} / ${progress.next} XP (${progress.percent}%)</div>
+                                </div>
                             </div>
                             <div class="enhanced-status-item">
                                 <div class="enhanced-status-label">職業</div>
@@ -321,7 +371,6 @@
             let bigName = isChinese(user.id) ? user.id : (isChinese(user.name) ? user.name : user.id);
             let smallName = (bigName === user.id) ? user.name : user.id;
             
-            // 這裡把資料拆成 5 個 <td>，對應上面的 5 個標題
             return `<tr>
                 <td style="text-align:center; font-size:1.2em;">${trophy}</td>
                 <td><span style="color:#888; font-size:0.95em;">${icon} ${user.job}</span></td>
