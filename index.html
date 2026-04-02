@@ -158,26 +158,31 @@
             z-index: 2;
         }
 
-        /* 📱 手機版專屬優化補丁 - 已從 xp-progress-text 移出並修正 */
+        /* 📱 手機版專屬優化補丁 */
         @media screen and (max-width: 600px) {
             .container { padding: 15px; margin: 10px auto; width: 95%; }
             h1 { font-size: 2em; }
             
-            /* 救回排行榜：自動撐開，避免字被擠掉 */
+            /* 🚀 重點：讓名字與稱號貼近 */
+            .enhanced-hero-header { 
+                flex-direction: column; /* 改成垂直排列 */
+                align-items: flex-start; /* 全部靠左對齊 */
+                gap: 5px; /* 設定小小的間距 */
+            }
+            .enhanced-hero-name { font-size: 1.6em; }
+            /* 讓稱號字體稍微縮小一點點，更有層次感 */
+            .enhanced-pink { font-size: 0.8em; } 
+
             .rank-table { 
                 table-layout: auto !important; 
-                font-size: 0.75em; /* 手機版字體縮小一點 */
+                font-size: 0.75em; 
             }
             .rank-table th, .rank-table td { padding: 10px 4px; }
+            .rank-table th:nth-child(1), .rank-table td:nth-child(1) { width: 35px !important; }
+            .rank-table th:nth-child(2), .rank-table td:nth-child(2) { width: 55px !important; }
+            .rank-table th:nth-child(3), .rank-table td:nth-child(3) { width: 45px !important; }
             
-            /* 針對每一欄位微調寬度，確保名稱最大 */
-            .rank-table th:nth-child(1), .rank-table td:nth-child(1) { width: 35px !important; } /* 排名 */
-            .rank-table th:nth-child(2), .rank-table td:nth-child(2) { width: 55px !important; } /* 職業 */
-            .rank-table th:nth-child(3), .rank-table td:nth-child(3) { width: 45px !important; } /* 等級 */
-            
-            /* 搜尋結果優化 */
             .enhanced-result-box { padding: 20px; }
-            .enhanced-hero-name { font-size: 1.5em; }
             .enhanced-status-grid { grid-template-columns: 1fr; }
         }
     </style>
