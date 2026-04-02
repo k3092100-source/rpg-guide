@@ -1,901 +1,434 @@
 <!DOCTYPE html>
-
 <html lang="zh-TW">
-
 <head>
-
     <meta charset="utf-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>《要拚實況RPG》官方指南 - 萌萌吃吃</title>
-
     <style>
-
         :root {
-
             --gold: #ffd700;
-
             --bg-dark: #0a0a0a;
-
             --panel-bg: rgba(20, 20, 20, 0.9);
-
             --neon-blue: #00d4ff;
-
             --neon-pink: #ff00ff;
-
             --warrior-red: #ff4d4d;
-
             --assassin-purple: #a64dff;
-
             --archer-green: #4dff4d;
-
         }
-
-
 
         body {
-
             margin: 0; padding: 0;
-
             background-color: var(--bg-dark);
-
             font-family: "Microsoft JhengHei", sans-serif;
-
             color: #eee;
-
             line-height: 1.7;
-
             background-image: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%);
-
             min-height: 100vh;
-
         }
-
-
 
         .container {
-
             max-width: 950px; margin: 40px auto; padding: 50px;
-
             background: var(--panel-bg);
-
             border: 2px solid #333; border-radius: 20px;
-
             box-shadow: 0 0 40px rgba(0,0,0,0.8), inset 0 0 15px rgba(255,215,0,0.1);
-
             backdrop-filter: blur(10px);
-
         }
-
-
 
         .header-info { text-align: center; color: #777; font-size: 0.9em; letter-spacing: 1px; margin-bottom: 10px; }
 
-
-
         h1 {
-
             text-align: center; color: var(--gold); font-size: 3.5em;
-
             text-shadow: 0 0 15px rgba(255,215,0,0.7);
-
             margin-bottom: 5px; animation: neonPulse 2s infinite alternate;
-
         }
-
-
 
         h2 {
-
             border-bottom: 2px solid var(--gold); padding-bottom: 12px;
-
             margin-top: 50px; color: #fff; font-size: 2em;
-
             display: flex; align-items: center;
-
         }
-
         h2::before { content: '✨'; margin-right: 15px; color: var(--gold); }
 
-
-
         .highlight { color: var(--gold); font-weight: bold; text-shadow: 0 0 5px rgba(255,215,0,0.5); }
-
         .pink-light { color: var(--neon-pink); font-weight: bold; }
 
-
-
         .job-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 30px; margin-top: 25px; }
-
         .job-box {
-
             background: rgba(255, 255, 255, 0.03); padding: 30px; border-radius: 12px;
-
             border: 1px solid #333; border-left: 6px solid #ccc;
-
             transition: all 0.3s ease; position: relative;
-
         }
-
         .job-box:hover { transform: translateY(-8px); background: rgba(255, 255, 255, 0.06); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
 
-
-
         .job-title { 
-
             display: flex; justify-content: space-between; align-items: center;
-
             font-size: 1.8em; font-weight: bold; color: #fff; margin-bottom: 15px; 
-
             border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; 
-
         }
-
         .job-tag { font-size: 0.4em; padding: 3px 10px; border-radius: 5px; color: white; vertical-align: middle; }
-
         .job-motto { font-style: italic; color: #aaa; font-size: 0.9em; margin-bottom: 15px; }
-
         
-
         .warrior { border-left-color: var(--warrior-red); }
-
         .archer { border-left-color: var(--archer-green); }
-
         .assassin { border-left-color: var(--assassin-purple); }
-
         .merchant { border-left-color: var(--gold); }
 
-
-
         .second-job {
-
             color: var(--neon-blue); border-top: 1px dashed rgba(0,212,255,0.3);
-
             margin-top: 15px; padding-top: 15px; font-size: 1em;
-
         }
 
-
-
         .live-status-bar { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
-
         .status-item { background: rgba(255, 255, 255, 0.05); border: 1px solid #444; padding: 15px; border-radius: 12px; text-align: center; }
-
         .status-label { font-size: 0.9em; color: #888; margin-bottom: 5px; }
-
         .status-val { font-size: 1.3em; font-weight: bold; }
 
-
-
         .search-box { display: flex; gap: 10px; margin-bottom: 20px; }
-
         .search-input { flex: 1; padding: 12px 15px; border-radius: 8px; border: 1px solid #444; background: rgba(0,0,0,0.5); color: white; outline: none; }
-
         .search-btn { padding: 10px 20px; background: var(--neon-blue); color: black; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
-
-
         .rank-table { width:100%; border-collapse: collapse; margin-top: 15px; }
-
         .rank-table thead tr { color: var(--gold); border-bottom: 2px solid #444; text-align: left; }
-
         .rank-table th, .rank-table td { padding: 15px 10px; }
-
         .rank-table tbody tr { border-bottom: 1px solid #333; }
 
-
-
         .rule-box { background: rgba(255, 255, 255, 0.05); border: 1px solid #444; padding: 25px; border-radius: 12px; margin-top: 25px; }
-
         .cmd-item { background: rgba(0, 212, 255, 0.05); border: 1px solid rgba(0, 212, 255, 0.2); padding: 15px; border-radius: 10px; margin-bottom: 15px; }
-
         .cmd-name { font-family: monospace; color: #00ff00; font-size: 1.2em; font-weight: bold; }
-
-
 
         .footer { text-align: center; margin-top: 60px; color: #666; font-size: 0.85em; border-top: 1px solid #333; padding-top: 20px; }
 
-
-
         @keyframes neonPulse { 0% { text-shadow: 0 0 10px rgba(255,215,0,0.7); } 100% { text-shadow: 0 0 20px rgba(255,215,0,0.9); } }
 
-
-
         /* 🌟 成就卡片特效 CSS */
-
         .enhanced-result-box {
-
             background: rgba(20, 20, 20, 0.95); padding: 40px; border-radius: 20px;
-
             border: 2px solid rgba(255, 255, 255, 0.05); position: relative; overflow: hidden;
-
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.9), inset 0 0 10px rgba(255, 215, 0, 0.1);
-
             backdrop-filter: blur(15px); animation: fadeInUp 0.5s ease-out;
-
         }
-
         .enhanced-hero-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
-
         .enhanced-hero-name { font-size: 2.2em; font-weight: 900; background: linear-gradient(to bottom, #fff 0%, #aaa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 15px rgba(255, 255, 255, 0.3); }
-
         .enhanced-hero-id { font-size: 0.9em; color: #666; font-weight: normal; -webkit-text-fill-color: #666; }
-
         .enhanced-status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
-
         .enhanced-status-item { background: rgba(255, 255, 255, 0.03); padding: 15px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.05); text-align: center; transition: transform 0.3s ease; }
-
         .enhanced-status-item:hover { transform: scale(1.05); }
-
         .enhanced-status-label { font-size: 0.85em; color: #888; margin-bottom: 5px; }
-
         .enhanced-status-val { font-size: 1.2em; font-weight: bold; display: flex; align-items: center; justify-content: center; }
-
         .enhanced-gold { color: var(--gold); }
-
         .enhanced-pink { color: var(--neon-pink); }
-
         .enhanced-red { color: #ff4d4d; }
-
         .enhanced-title-wall { margin-top: 30px; }
-
         .enhanced-title-label { font-size: 1.1em; color: #fff; margin-bottom: 15px; display: flex; align-items: center; }
-
         .enhanced-title-label::before { content: '🏆'; margin-right: 10px; font-size: 1.3em; }
-
         .enhanced-title-tags { display: flex; flex-wrap: wrap; gap: 10px; }
-
         .enhanced-title-tag { padding: 8px 15px; background: rgba(20, 20, 20, 0.8); border-radius: 8px; border: 1px solid rgba(255, 215, 0, 0.15); color: var(--gold); font-size: 0.9em; transition: all 0.3s ease; cursor: default; position: relative; }
-
         .enhanced-title-tag:hover { background: rgba(20, 20, 20, 0.95); border-color: rgba(255, 215, 0, 0.4); transform: translateY(-3px); box-shadow: 0 5px 15px rgba(255, 215, 0, 0.1); }
-
         @keyframes fadeInUp { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
-
         @keyframes neonOutline { 0% { border-color: rgba(255, 215, 0, 0.05); } 100% { border-color: rgba(255, 215, 0, 0.2); } }
 
-
-
         /* 📊 [新增] 經驗值長條圖樣式 */
-
         .xp-progress-container {
-
             width: 100%;
-
             background: rgba(0, 0, 0, 0.5);
-
             border: 1px solid rgba(255, 215, 0, 0.1);
-
             border-radius: 15px;
-
             height: 20px;
-
             margin-top: 10px;
-
             position: relative;
-
             overflow: hidden;
-
             box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
-
         }
-
         .xp-progress-fill {
-
             height: 100%;
-
             background: linear-gradient(90deg, #ff8c00, var(--gold));
-
             width: 0%;
-
             transition: width 1.2s cubic-bezier(0.1, 0.7, 1.0, 0.1);
-
             box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
-
         }
-
         .xp-progress-text {
-
             position: absolute;
-
             width: 100%;
-
             text-align: center;
-
             font-size: 11px;
-
             line-height: 20px;
-
             color: #fff;
-
             font-weight: bold;
-
             text-shadow: 1px 1px 2px #000;
-
             z-index: 2;
-
-
-
-            /* 📱 手機版專屬優化補丁 */
-
-@media screen and (max-width: 600px) {
-
-    /* 1. 讓容器不要擠得太死 */
-
-    .container { padding: 15px; margin: 10px auto; }
-
-    
-
-    /* 2. 標題縮小一點，不然手機會爆開 */
-
-    h1 { font-size: 2em; }
-
-    
-
-    /* 3. 重點！救回排行榜的字 */
-
-    .rank-table { 
-
-        table-layout: auto !important; /* 讓表格根據文字長度自動伸張 */
-
-        font-size: 0.85em; /* 手機字體稍微縮小一點點 */
-
-    }
-
-    
-
-    /* 4. 隱藏不必要的欄位（在手機上看職業图标就夠了，字可以縮短） */
-
-    .rank-table th:nth-child(2), .rank-table td:nth-child(2) { width: 60px !important; } /* 職業欄縮窄 */
-
-    
-
-    /* 5. 搜尋結果卡片優化 */
-
-    .enhanced-result-box { padding: 20px; }
-
-    .enhanced-hero-name { font-size: 1.5em; }
-
-}
-
         }
 
+        /* 📱 手機版專屬優化補丁 - 已從 xp-progress-text 移出並修正 */
+        @media screen and (max-width: 600px) {
+            .container { padding: 15px; margin: 10px auto; width: 95%; }
+            h1 { font-size: 2em; }
+            
+            /* 救回排行榜：自動撐開，避免字被擠掉 */
+            .rank-table { 
+                table-layout: auto !important; 
+                font-size: 0.75em; /* 手機版字體縮小一點 */
+            }
+            .rank-table th, .rank-table td { padding: 10px 4px; }
+            
+            /* 針對每一欄位微調寬度，確保名稱最大 */
+            .rank-table th:nth-child(1), .rank-table td:nth-child(1) { width: 35px !important; } /* 排名 */
+            .rank-table th:nth-child(2), .rank-table td:nth-child(2) { width: 55px !important; } /* 職業 */
+            .rank-table th:nth-child(3), .rank-table td:nth-child(3) { width: 45px !important; } /* 等級 */
+            
+            /* 搜尋結果優化 */
+            .enhanced-result-box { padding: 20px; }
+            .enhanced-hero-name { font-size: 1.5em; }
+            .enhanced-status-grid { grid-template-columns: 1fr; }
+        }
     </style>
-
 </head>
-
 <body>
-
     <div class="container">
-
         <div class="header-info">◤ 第一賽季：英雄崛起 ◢ &nbsp; | &nbsp; 製作人：萌萌吃吃</div>
-
         <h1>🏆 《要拚實況RPG》</h1>
-
         <div style="text-align: center; color: #ff00ff; font-size: 1.3em; margin-bottom: 40px; font-weight: bold;">～ 5月正式開服，12/31 結算年度總榜送驚喜大獎！ ～</div>
 
-
-
         <h2>🌟 第一季營運公告(現階段為不刪檔封測)</h2>
-
         <div class="rule-box">
-
             <p><span class="pink-light">為彌補之前封測檔案遺失，4月封測開始即不刪檔</span>！</p>
-
             <p>這不是普通的掛網，這是 <span class="pink-light">2026年重磅回饋活動～</span>！</p>
-
             <p>為了讓大家看台互動性更高～設計了一個聊天室迷你RPG遊戲！</p>
-
             <p>只要<span class="highlight">掛台每3分鐘能獲得5XP</span>!打字可獲得<span class="highlight">10XP(3分鐘CD)</span></p>
-
             <p>本季等級上限為 <span class="highlight">Lv.100</span>。 若發生任何洗頻行為MOD有權禁言600秒。</p>
-
             <p>正式版5月開始～用你的方式來支持吃吃力拼年末<span class="highlight">實體獎品</span>，跟我一起拚！</p>
-
         </div>
-
-
 
         <h2>👹 萬血魔王：打王不打混</h2>
-
         <div class="rule-box">
-
             <ul style="list-style-type: disc; padding-left: 20px;">
-
                 <li style="margin-bottom: 15px;"><span class="highlight">全服共享紅包：</span> 魔王倒下後，全服玩家 (包含掛台) 可獲得 <span class="highlight">200 XP</span>！</li>
-
                 <li style="margin-bottom: 15px;"><span class="highlight">魔王攻擊：</span> 魔王戰期間隨機攻擊，中招者將被 "禁言"，如 <span class="highlight">累積震飛 20 次</span> 可獲得 <span class="pink-light">認證非洲人</span> 稀有稱號！</li>
-
                 <li style="margin-bottom: 15px;"><span class="highlight">尾刀霸主：</span> 給予魔王最後一擊的勇者，直接領取 <span class="highlight">500 XP</span>！</li>
-
                 <li style="margin-bottom: 15px;"><span class="highlight">魔王終結者：</span> 隨機抽一位勇者獲得該稀有稱號 <span class="pink-light">魔王終結者</span>！</li>
-
                 <li style="margin-bottom: 5px;"><span class="highlight">超級大賽狗：</span> 0.01% 機率觸發 <span class="pink-light">天選爆擊 1000 傷</span> 並獲得永久專屬稱號！</li>
-
             </ul>
-
         </div>
-
-
 
         <h2>🎭 職業體系 (Lv.15 一轉 / Lv.50 二轉)</h2>
-
         <div class="job-grid">
-
             <div class="job-box warrior">
-
                 <div class="job-title">⚔️ 戰士系 <span class="job-tag" style="background: var(--warrior-red);">穩定增傷</span></div>
-
                 <div class="job-motto">「魔王血越少，我打得越痛，殘血收割的絕對王者。」</div>
-
                 <div><b>[一轉] 戰士：</b> 基礎傷害 <span class="highlight">20</span>。魔王每損血 20%，傷害額外 <span class="highlight">+10</span>。</div>
-
                 <div class="second-job">🔥 <b>[二轉] 狂戰士：</b><br>基礎傷害升至 <span class="highlight">45</span>！增傷間距縮短為 10% 即 <span class="highlight">+15</span>，殘血最高輸出達 <span class="highlight">180</span>！</div>
-
             </div>
-
             <div class="job-box assassin">
-
                 <div class="job-title">💀 刺客系 <span class="job-tag" style="background: var(--assassin-purple);">運氣爆擊</span></div>
-
                 <div class="job-motto">「40% 的機率，是我主宰戰場的唯一證明。」</div>
-
                 <div><b>[一轉] 刺客：</b> 基礎傷害10。 <span class="highlight">20%</span> 機率噴發 <span class="highlight">150</span> 點爆擊傷害！</div>
-
                 <div class="second-job">🌚 <b>[二轉] 影之殺手：</b><br>爆擊率翻倍至 <span class="highlight">40%</span>！爆傷直衝 <span class="highlight">300</span>，搶尾刀最兇狠的賭徒.</div>
-
             </div>
-
             <div class="job-box archer">
-
                 <div class="job-title">🏹 弓箭手 <span class="job-tag" style="background: var(--archer-green);">連擊之魂</span></div>
-
                 <div class="job-motto">「節奏不中斷，我的箭雨就是永恆。」</div>
-
                 <div><b>[一轉] 弓箭手：</b> 基礎傷害<span class="highlight">20</span>。每分鐘都能<span class="highlight">疊層+10</span>傷害，最多<span class="highlight">5層70點</span>傷害，超過5分鐘閒置疊層消失。</div>
-
                 <div class="second-job">🍃 <b>[二轉] 神射手：</b><br>一轉的<span class="highlight">3倍</span>極限疊加機制，無視防禦的絕對穿透，傷害最高可達 <span class="highlight">210</span>。</div>
-
             </div>
-
             <div class="job-box merchant">
-
                 <div class="job-title">💰 商人系 <span class="job-tag" style="background: var(--gold); color: black;">掛網推薦</span></div>
-
                 <div class="job-motto">「戰鬥是你們的，經驗值是我的。」</div>
-
                 <div><b>[一轉] 商人：</b> 基礎攻擊15。魔王成功擊殺結算時獲取 <span class="highlight">3倍(600XP)</span> 全服魔王紅包。</div>
-
                 <div class="second-job">💎 <b>[二轉] 大亨：</b><br>將魔王共享紅包升級為 <span class="highlight">5 倍 (1,000 XP)</span>，全伺服器最速升級專家。</div>
-
             </div>
-
         </div>
-
-
 
         <h2>🔥 超爆經驗燃燒加倍時段</h2>
-
         <div class="rule-box" style="border-left: 6px solid var(--neon-pink);">
-
             <p>於 <span class="pink-light">工商直播</span> 或特定 <span class="pink-light">驚喜時段</span>，將全服開啟 <span class="pink-light">10 倍燃燒模式</span>！</p>
-
             <p>燃燒期間每句聊天將獲得 <span class="highlight">100 XP</span> (冷卻時間與平時相同)。這是各位勇者衝刺等級、反超排名、奪取年底大獎的最佳時機！</p>
-
         </div>
-
-
 
         <h2>📜 冒險者公會：指令手冊</h2>
-
         <div class="rule-box">
-
             <div class="cmd-list">
-
                 <div class="cmd-item"><div class="cmd-name">!RPG</div><div class="cmd-desc">查看個人冒險狀態。包含當前等級、累積 XP 以及目前裝備的稱號與職業。聊天室有使用CD時間，建議使用官網查詢。</div></div>
-
                 <div class="cmd-item"><div class="cmd-name">!轉職 [職業名稱]</div><div class="cmd-desc">當等級達到 <span class="highlight">Lv.15</span> 時，可輸入此指令進行轉職（例如：!轉職 戰士）。</div></div>
-
                 <div class="cmd-item"><div class="cmd-name">!二轉 [職業名稱]</div><div class="cmd-desc">當等級達到 <span class="highlight">Lv.50</span> 時，可輸入此指令進行二轉，不用輸入職業名稱。</div></div>
-
                 <div class="cmd-item"><div class="cmd-name">!我的稱號</div><div class="cmd-desc">列出你目前所擁有的所有稀有稱號。讓你確認哪些永久榮耀已經入袋！</div></div>
-
                 <div class="cmd-item"><div class="cmd-name">!換稱號 [稱號名稱]</div><div class="cmd-desc">從你擁有的稱號清單中，挑選一個最帥的掛在名字前面。</div></div>
-
             </div>
-
         </div>
-
-
 
         <h2>🏆 年度霸權即時榜</h2>
-
         <div class="rule-box" style="background: rgba(0,0,0,0.3);">
-
             <div class="live-status-bar">
-
                 <div class="status-item">
-
                     <div class="status-label">👹 魔王預報</div>
-
                     <div id="boss-display" class="status-val" style="color: #ff4d4d;">連線中...</div>
-
                 </div>
-
                 <div class="status-item" id="burn-box">
-
                     <div class="status-label">🔥 燃燒模式</div>
-
                     <div id="burn-display" class="status-val">連線中...</div>
-
                 </div>
-
             </div>
-
-
 
             <div class="search-box">
-
                 <input type="text" id="search-input" class="search-input" placeholder="輸入 Twitch ID 查詢個人進度">
-
                 <button onclick="searchUser()" class="search-btn">搜尋</button>
-
             </div>
-
             <div id="search-result" style="display: none; margin-bottom: 20px;"></div>
 
-
-
             <div id="leaderboard-loading">名冊翻閱中...</div>
-
             
-
             <table id="rank-table" class="rank-table" style="display:none; width: 100%; table-layout: fixed;">
-
                 <colgroup>
-
                     <col style="width: 12%;">
-
                     <col style="width: 18%;">
-
                     <col style="width: 15%;">
-
                     <col style="width: 35%;">
-
                     <col style="width: 20%;">
-
                 </colgroup>
-
                 <thead>
-
                     <tr>
-
                         <th style="text-align:center;">排名</th>
-
                         <th style="text-align:left;">職業</th>
-
                         <th style="text-align:left;">等級</th>
-
                         <th style="text-align:left;">勇者名稱</th>
-
                         <th style="text-align:right;">貢獻度 (XP)</th>
-
                     </tr>
-
                 </thead>
-
                 <tbody id="leaderboard-body"></tbody>
-
             </table>
-
         </div>
-
-
 
         <div class="footer">
-
             製作人：萌萌吃吃 &nbsp; | &nbsp; 雲端數據同步中<br>
-
             * 若搜尋不到自己，請在實況間輸入 !RPG 重新同步數據 *
-
         </div>
-
     </div>
 
-
-
 <script>
-
-    // 🌟 這裡就是妳那串可以正常運作的 Google 網址
-
     const cloudUrl = 'https://script.google.com/macros/s/AKfycbyI6ZlONHRQDp2Ts8OgDrOrHpAW16wQlXLupC2CT-i0-ck7XTo-ZAHmo2luYY13LNLwUQ/exec';
-
-    
-
     const jobIcons = { "戰士": "⚔️", "狂戰士": "🔥", "弓箭手": "🏹", "神射手": "🍃", "刺客": "💀", "影之殺手": "🌚", "商人": "💰", "大亨": "💎", "初心者": "🛡️" };
-
     let bossTimerInterval; 
-
-
-
     const isChinese = (str) => /[\u4e00-\u9fa5]/.test(str);
 
-
-
-    // 🌟 [新增] 經驗值公式邏輯
-
     function calculateXpProgress(lv, xp) {
-
         if (lv >= 100) return { percent: 100, next: "MAX" };
-
         let req = 50;
-
         if (lv < 15) req = 50;
-
         else if (lv < 50) req = 500 + ((lv - 15 + 1) * 150);
-
         else req = 4500 + ((lv - 50 + 1) * 250);
-
-        
-
         let percent = Math.min((xp / req) * 100, 100).toFixed(1);
-
         return { percent, next: req };
-
     }
-
-
-
-    // 🌟 搜尋個人成就功能 (美術加強版)
 
     async function searchUser() {
-
         const searchText = document.getElementById('search-input').value.trim().toLowerCase();
-
         const resultBox = document.getElementById('search-result');
-
         if (!searchText) return;
-
         resultBox.style.display = 'block';
-
         resultBox.innerHTML = '<span style="color: #888;">正在翻閱名冊...</span>';
-
         try {
-
             const response = await fetch(cloudUrl);
-
             const data = await response.json();
-
             const user = data.ranks.find(r => r.id.toLowerCase() === searchText || r.name.toLowerCase() === searchText);
-
-            
-
             if (!user) {
-
                 resultBox.innerHTML = `<span style="color: #ff4d4d;">❌ 找不到 "${searchText}"。</span>`;
-
             } else {
-
                 const icon = jobIcons[user.job] || "🛡️";
-
                 let bigName = isChinese(user.id) ? user.id : (isChinese(user.name) ? user.name : user.id);
-
                 let smallName = (bigName === user.id) ? user.name : user.id;
-
-
-
                 const titleTags = user.allTitles && user.allTitles !== "無" 
-
                     ? user.allTitles.split(',').map(t => `<span class="enhanced-title-tag">${t}</span>`).join('')
-
                     : '<span style="color:#666; font-style:italic;">尚無特殊里程碑</span>';
-
-
-
-                // 🌟 [新增] 計算經驗條資料
-
                 const progress = calculateXpProgress(user.lvl, user.xp);
-
-
-
                 resultBox.innerHTML = `
-
                     <div class="enhanced-result-box">
-
                         <div class="enhanced-hero-header">
-
                             <div>
-
                                 <span class="enhanced-hero-name">${bigName}</span>
-
                                 <span class="enhanced-hero-id">(${smallName})</span>
-
                             </div>
-
                             <span style="font-size: 1.3em;">${user.title == "無" ? "" : '<span class="enhanced-pink">'+user.title+'</span>'}</span>
-
                         </div>
-
                         <div class="enhanced-status-grid">
-
                             <div class="enhanced-status-item">
-
                                 <div class="enhanced-status-label">等級</div>
-
                                 <div class="enhanced-status-val enhanced-gold">Lv.${user.lvl}</div>
-
                                 <div class="xp-progress-container">
-
                                     <div class="xp-progress-fill" style="width: ${progress.percent}%"></div>
-
                                     <div class="xp-progress-text">${user.xp} / ${progress.next} XP (${progress.percent}%)</div>
-
                                 </div>
-
                             </div>
-
                             <div class="enhanced-status-item">
-
                                 <div class="enhanced-status-label">職業</div>
-
                                 <div class="enhanced-status-val">${icon} ${user.job}</div>
-
                             </div>
-
                             <div class="enhanced-status-item">
-
                                 <div class="enhanced-status-label">👹 震飛次數</div>
-
                                 <div class="enhanced-status-val enhanced-red">${user.fly || 0} 次</div>
-
                             </div>
-
                         </div>
-
                         <div class="enhanced-title-wall">
-
                             <div class="enhanced-title-label">擁有的榮耀里程碑</div>
-
                             <div class="enhanced-title-tags">${titleTags}</div>
-
                         </div>
-
                     </div>`;
-
             }
-
         } catch (err) { resultBox.innerHTML = '連線超時，請重試。'; }
-
     }
-
-
-
-    // 🌟 渲染排行榜 (絕對對齊版)
 
     function renderLeaderboard(ranks) {
-
         const body = document.getElementById('leaderboard-body');
-
         body.innerHTML = ranks.slice(0, 20).map((user, index) => {
-
             let trophy = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : (index + 1);
-
             let icon = jobIcons[user.job] || "🛡️";
-
             let bigName = isChinese(user.id) ? user.id : (isChinese(user.name) ? user.name : user.id);
-
             let smallName = (bigName === user.id) ? user.name : user.id;
-
-            
-
             return `<tr>
-
                 <td style="text-align:center; font-size:1.2em;">${trophy}</td>
-
                 <td><span style="color:#888; font-size:0.95em;">${icon} ${user.job}</span></td>
-
                 <td><b style="color:var(--gold);">Lv.${user.lvl}</b></td>
-
                 <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-
                     <span style="color:#fff; font-size:1.2em; font-weight:bold; letter-spacing:1px;">${bigName}</span> 
-
                     <span style="color:#666; font-size:0.85em; margin-left:5px;">(${smallName})</span>
-
                 </td>
-
                 <td style="text-align:right; font-weight:bold; color:var(--gold); font-size:1.1em;">${(user.xp || 0).toLocaleString()} XP</td>
-
             </tr>`;
-
         }).join('');
-
     }
-
-
-
-    // 🌟 主程式連線邏輯
 
     async function fetchRpgData() {
-
         try {
-
             const response = await fetch(cloudUrl);
-
             const data = await response.json();
-
             renderLeaderboard(data.ranks);
-
-            
-
             const bossDisplay = document.getElementById('boss-display');
-
             if (data.boss && data.boss.targetTs > 0) {
-
                 if (bossTimerInterval) clearInterval(bossTimerInterval);
-
-                bossDisplay.style.color = "#ff4d4d"; // 魔王出現時亮紅色
-
+                bossDisplay.style.color = "#ff4d4d";
                 bossTimerInterval = setInterval(() => {
-
                     const distance = data.boss.targetTs - new Date().getTime();
-
                     if (distance <= 0) { bossDisplay.innerText = "魔王降臨中！"; clearInterval(bossTimerInterval); }
-
                     else {
-
                         const m = Math.floor((distance % 3600000) / 60000);
-
                         const s = Math.floor((distance % 60000) / 1000);
-
                         bossDisplay.innerText = `👹 魔王 ⏳ ${m}:${s.toString().padStart(2,'0')}`;
-
                     }
-
                 }, 1000);
-
             } else {
-
                 if (bossTimerInterval) clearInterval(bossTimerInterval);
-
                 bossDisplay.innerText = "💤 目前無魔王蹤跡";
-
                 bossDisplay.style.color = "#888"; 
-
             }
-
-
-
             const burnDisplay = document.getElementById('burn-display');
-
             burnDisplay.innerText = data.burning === "ON" ? "10倍燃燒中！" : "一般模式";
-
             burnDisplay.style.color = data.burning === "ON" ? "#ff00ff" : "#888";
-
             document.getElementById('leaderboard-loading').style.display = 'none';
-
             document.getElementById('rank-table').style.display = 'table';
-
         } catch (err) { 
-
             console.error("抓取失敗", err); 
-
-            document.getElementById('boss-display').innerText = '連線失敗(請檢查GAS權限)';
-
-            document.getElementById('burn-display').innerText = '連線失敗';
-
+            document.getElementById('boss-display').innerText = '連線失敗';
         }
-
     }
-
-
-
     fetchRpgData();
-
     setInterval(fetchRpgData, 30000);
-
 </script>
-
 </body>
-
 </html>
