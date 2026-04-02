@@ -156,6 +156,28 @@
             font-weight: bold;
             text-shadow: 1px 1px 2px #000;
             z-index: 2;
+
+            /* 📱 手機版專屬優化補丁 */
+@media screen and (max-width: 600px) {
+    /* 1. 讓容器不要擠得太死 */
+    .container { padding: 15px; margin: 10px auto; }
+    
+    /* 2. 標題縮小一點，不然手機會爆開 */
+    h1 { font-size: 2em; }
+    
+    /* 3. 重點！救回排行榜的字 */
+    .rank-table { 
+        table-layout: auto !important; /* 讓表格根據文字長度自動伸張 */
+        font-size: 0.85em; /* 手機字體稍微縮小一點點 */
+    }
+    
+    /* 4. 隱藏不必要的欄位（在手機上看職業图标就夠了，字可以縮短） */
+    .rank-table th:nth-child(2), .rank-table td:nth-child(2) { width: 60px !important; } /* 職業欄縮窄 */
+    
+    /* 5. 搜尋結果卡片優化 */
+    .enhanced-result-box { padding: 20px; }
+    .enhanced-hero-name { font-size: 1.5em; }
+}
         }
     </style>
 </head>
