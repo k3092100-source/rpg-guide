@@ -100,7 +100,6 @@
 
         @keyframes neonPulse { 0% { text-shadow: 0 0 10px rgba(255,215,0,0.7); } 100% { text-shadow: 0 0 20px rgba(255,215,0,0.9); } }
 
-        /* 🌟 成就卡片特效 CSS */
         .enhanced-result-box {
             background: rgba(20, 20, 20, 0.95); padding: 40px; border-radius: 20px;
             border: 2px solid rgba(255, 255, 255, 0.05); position: relative; overflow: hidden;
@@ -124,10 +123,8 @@
         .enhanced-title-tags { display: flex; flex-wrap: wrap; gap: 10px; }
         .enhanced-title-tag { padding: 8px 15px; background: rgba(20, 20, 20, 0.8); border-radius: 8px; border: 1px solid rgba(255, 215, 0, 0.15); color: var(--gold); font-size: 0.9em; transition: all 0.3s ease; cursor: default; position: relative; }
         .enhanced-title-tag:hover { background: rgba(20, 20, 20, 0.95); border-color: rgba(255, 215, 0, 0.4); transform: translateY(-3px); box-shadow: 0 5px 15px rgba(255, 215, 0, 0.1); }
-        @keyframes fadeInUp { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
-        @keyframes neonOutline { 0% { border-color: rgba(255, 215, 0, 0.05); } 100% { border-color: rgba(255, 215, 0, 0.2); } }
-
-        /* 📊 [新增] 經驗值長條圖樣式 */
+        
+        /* 經驗值長條圖樣式 */
         .xp-progress-container {
             width: 100%;
             background: rgba(0, 0, 0, 0.5);
@@ -156,28 +153,23 @@
             font-weight: bold;
             text-shadow: 1px 1px 2px #000;
             z-index: 2;
+        }
 
-            /* 📱 手機版專屬優化補丁 */
-@media screen and (max-width: 600px) {
-    /* 1. 讓容器不要擠得太死 */
-    .container { padding: 15px; margin: 10px auto; }
-    
-    /* 2. 標題縮小一點，不然手機會爆開 */
-    h1 { font-size: 2em; }
-    
-    /* 3. 重點！救回排行榜的字 */
-    .rank-table { 
-        table-layout: auto !important; /* 讓表格根據文字長度自動伸張 */
-        font-size: 0.85em; /* 手機字體稍微縮小一點點 */
-    }
-    
-    /* 4. 隱藏不必要的欄位（在手機上看職業图标就夠了，字可以縮短） */
-    .rank-table th:nth-child(2), .rank-table td:nth-child(2) { width: 60px !important; } /* 職業欄縮窄 */
-    
-    /* 5. 搜尋結果卡片優化 */
-    .enhanced-result-box { padding: 20px; }
-    .enhanced-hero-name { font-size: 1.5em; }
-}
+        /* 📱 手機版專屬優化補丁 - 搬到正確的位置了 */
+        @media screen and (max-width: 600px) {
+            .container { padding: 15px; margin: 10px auto; width: 95%; }
+            h1 { font-size: 2em; }
+            .rank-table { 
+                table-layout: auto !important; 
+                font-size: 0.8em; 
+            }
+            .rank-table th, .rank-table td { padding: 8px 4px; }
+            .rank-table th:nth-child(2), .rank-table td:nth-child(2) { width: 45px !important; } 
+            .rank-table th:nth-child(3), .rank-table td:nth-child(3) { width: 50px !important; }
+            
+            .enhanced-result-box { padding: 20px; }
+            .enhanced-hero-name { font-size: 1.5em; }
+            .enhanced-status-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -302,27 +294,21 @@
     </div>
 
 <script>
-    // 🌟 這裡就是妳那串可以正常運作的 Google 網址
     const cloudUrl = 'https://script.google.com/macros/s/AKfycbyI6ZlONHRQDp2Ts8OgDrOrHpAW16wQlXLupC2CT-i0-ck7XTo-ZAHmo2luYY13LNLwUQ/exec';
-    
     const jobIcons = { "戰士": "⚔️", "狂戰士": "🔥", "弓箭手": "🏹", "神射手": "🍃", "刺客": "💀", "影之殺手": "🌚", "商人": "💰", "大亨": "💎", "初心者": "🛡️" };
     let bossTimerInterval; 
-
     const isChinese = (str) => /[\u4e00-\u9fa5]/.test(str);
 
-    // 🌟 [新增] 經驗值公式邏輯
     function calculateXpProgress(lv, xp) {
         if (lv >= 100) return { percent: 100, next: "MAX" };
         let req = 50;
         if (lv < 15) req = 50;
         else if (lv < 50) req = 500 + ((lv - 15 + 1) * 150);
         else req = 4500 + ((lv - 50 + 1) * 250);
-        
         let percent = Math.min((xp / req) * 100, 100).toFixed(1);
         return { percent, next: req };
     }
 
-    // 🌟 搜尋個人成就功能 (美術加強版)
     async function searchUser() {
         const searchText = document.getElementById('search-input').value.trim().toLowerCase();
         const resultBox = document.getElementById('search-result');
@@ -333,21 +319,16 @@
             const response = await fetch(cloudUrl);
             const data = await response.json();
             const user = data.ranks.find(r => r.id.toLowerCase() === searchText || r.name.toLowerCase() === searchText);
-            
             if (!user) {
                 resultBox.innerHTML = `<span style="color: #ff4d4d;">❌ 找不到 "${searchText}"。</span>`;
             } else {
                 const icon = jobIcons[user.job] || "🛡️";
                 let bigName = isChinese(user.id) ? user.id : (isChinese(user.name) ? user.name : user.id);
                 let smallName = (bigName === user.id) ? user.name : user.id;
-
                 const titleTags = user.allTitles && user.allTitles !== "無" 
                     ? user.allTitles.split(',').map(t => `<span class="enhanced-title-tag">${t}</span>`).join('')
                     : '<span style="color:#666; font-style:italic;">尚無特殊里程碑</span>';
-
-                // 🌟 [新增] 計算經驗條資料
                 const progress = calculateXpProgress(user.lvl, user.xp);
-
                 resultBox.innerHTML = `
                     <div class="enhanced-result-box">
                         <div class="enhanced-hero-header">
@@ -384,7 +365,6 @@
         } catch (err) { resultBox.innerHTML = '連線超時，請重試。'; }
     }
 
-    // 🌟 渲染排行榜 (絕對對齊版)
     function renderLeaderboard(ranks) {
         const body = document.getElementById('leaderboard-body');
         body.innerHTML = ranks.slice(0, 20).map((user, index) => {
@@ -392,7 +372,6 @@
             let icon = jobIcons[user.job] || "🛡️";
             let bigName = isChinese(user.id) ? user.id : (isChinese(user.name) ? user.name : user.id);
             let smallName = (bigName === user.id) ? user.name : user.id;
-            
             return `<tr>
                 <td style="text-align:center; font-size:1.2em;">${trophy}</td>
                 <td><span style="color:#888; font-size:0.95em;">${icon} ${user.job}</span></td>
@@ -406,17 +385,15 @@
         }).join('');
     }
 
-    // 🌟 主程式連線邏輯
     async function fetchRpgData() {
         try {
             const response = await fetch(cloudUrl);
             const data = await response.json();
             renderLeaderboard(data.ranks);
-            
             const bossDisplay = document.getElementById('boss-display');
             if (data.boss && data.boss.targetTs > 0) {
                 if (bossTimerInterval) clearInterval(bossTimerInterval);
-                bossDisplay.style.color = "#ff4d4d"; // 魔王出現時亮紅色
+                bossDisplay.style.color = "#ff4d4d";
                 bossTimerInterval = setInterval(() => {
                     const distance = data.boss.targetTs - new Date().getTime();
                     if (distance <= 0) { bossDisplay.innerText = "魔王降臨中！"; clearInterval(bossTimerInterval); }
@@ -431,7 +408,6 @@
                 bossDisplay.innerText = "💤 目前無魔王蹤跡";
                 bossDisplay.style.color = "#888"; 
             }
-
             const burnDisplay = document.getElementById('burn-display');
             burnDisplay.innerText = data.burning === "ON" ? "10倍燃燒中！" : "一般模式";
             burnDisplay.style.color = data.burning === "ON" ? "#ff00ff" : "#888";
@@ -439,11 +415,9 @@
             document.getElementById('rank-table').style.display = 'table';
         } catch (err) { 
             console.error("抓取失敗", err); 
-            document.getElementById('boss-display').innerText = '連線失敗(請檢查GAS權限)';
-            document.getElementById('burn-display').innerText = '連線失敗';
+            document.getElementById('boss-display').innerText = '連線失敗';
         }
     }
-
     fetchRpgData();
     setInterval(fetchRpgData, 30000);
 </script>
