@@ -216,7 +216,7 @@
         }
         .qa-item.active { border-color: var(--neon-blue); background: rgba(0, 212, 255, 0.03); }
         .qa-item.active .qa-answer { 
-            max-height: 200px; 
+            max-height: 1000px; 
             padding: 15px 20px; 
             border-top: 1px solid rgba(0, 212, 255, 0.2); 
         }
@@ -399,49 +399,74 @@
                 魔王通常由吃吃手動開啟。請密切關注官網、實況上的 <span class="highlight">「魔王降臨倒數」</span>，時間一到，請各位勇者準備好武器在聊天室集合！
             </div>
         </div>
-<div class="qa-item" style="border: 1px solid #ffd700; background: rgba(255, 215, 0, 0.05); margin-bottom: 20px;">
+<div class="qa-item" style="border: 1px solid #ffd700; background: rgba(0, 0, 0, 0.6); margin-bottom: 20px;">
     <div class="qa-question" onclick="toggleQA(this)" style="color: #ffd700; font-weight: bold; display: flex; justify-content: space-between; align-items: center;">
-        <span>📜 點我展開：全等級階級與所需經驗表 (Lv.1 - 100)</span>
+        <span>📜 點我展開：勇者 1-100 級全等級經驗表</span>
         <span style="font-size: 0.8em; color: #aaa;">點擊展開 / 收合</span>
     </div>
     <div class="qa-answer">
-        <div style="padding: 10px; background: rgba(0,0,0,0.4); border-radius: 8px;">
-            <table class="exp-table" style="width: 100%; border-collapse: collapse; font-family: 'Courier New', Courier, monospace;">
-                <thead>
-                    <tr style="background: #ffd700; color: #000; font-weight: bold;">
-                        <th style="padding: 10px; border: 1px solid #444;">等級區段</th>
+        <div style="max-height: 450px; overflow-y: auto; background: rgba(0,0,0,0.5); border-radius: 8px;">
+            <table style="width: 100%; border-collapse: collapse; text-align: center; color: #fff; font-family: 'Courier New', monospace;">
+                <thead style="position: sticky; top: 0; background: #ffd700; color: #000; z-index: 10;">
+                    <tr>
+                        <th style="padding: 10px; border: 1px solid #444;">等級</th>
                         <th style="padding: 10px; border: 1px solid #444;">階級稱號</th>
-                        <th style="padding: 10px; border: 1px solid #444;">單級所需 EXP</th>
-                        <th style="padding: 10px; border: 1px solid #444;">掛台速度</th>
+                        <th style="padding: 10px; border: 1px solid #444;">所需 EXP</th>
                     </tr>
                 </thead>
-                <tbody style="text-align: center; color: #fff;">
-                    <tr>
-                        <td style="padding: 8px; border: 1px solid #444; background: rgba(255,255,255,0.05);">Lv.1 ~ 14</td>
-                        <td style="padding: 8px; border: 1px solid #444; color: #00d4ff;">🐣 初心者</td>
-                        <td style="padding: 8px; border: 1px solid #444;">50</td>
-                        <td style="padding: 8px; border: 1px solid #444;">30分 / 級</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 8px; border: 1px solid #444; background: rgba(255,255,255,0.05);">Lv.15 ~ 49</td>
-                        <td style="padding: 8px; border: 1px solid #444; color: #7dff00;">⚔️ 一轉職業</td>
-                        <td style="padding: 8px; border: 1px solid #444;">500 + (150/級)</td>
-                        <td style="padding: 8px; border: 1px solid #444;">慢慢變難...</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 8px; border: 1px solid #444; background: rgba(255,255,255,0.05);">Lv.50 ~ 99</td>
-                        <td style="padding: 8px; border: 1px solid #444; color: #ff00ea;">🔥 二轉巔峰</td>
-                        <td style="padding: 8px; border: 1px solid #444;">4500 + (250/級)</td>
-                        <td style="padding: 8px; border: 1px solid #444;">爆肝之路</td>
-                    </tr>
-                    <tr style="color: #ffd700; font-weight: bold;">
-                        <td style="padding: 8px; border: 1px solid #444; background: rgba(255,215,0,0.1);">Lv.100</td>
-                        <td style="padding: 8px; border: 1px solid #444;">👑 傳說英雄</td>
-                        <td style="padding: 8px; border: 1px solid #444;">---</td>
-                        <td style="padding: 8px; border: 1px solid #444;">封頂</td>
-                    </tr>
-                </tbody>
+                <tbody id="dynamic-exp-table">
+                    </tbody>
             </table>
+        </div>
+        <p style="font-size: 0.8em; color: #aaa; margin-top: 10px; padding-left: 10px;">
+            💡 小撇步：高等級經驗值跳漲較快，建議利用「魔王戰」或「燃燒模式」快速升級！
+        </p>
+    </div>
+</div>
+
+<script>
+// 🌟 欣語村長的自動表格生成器
+(function() {
+    const tableBody = document.getElementById('dynamic-exp-table');
+    let rows = '';
+
+    for (let lv = 1; lv <= 100; lv++) {
+        let xp = 0;
+        let title = '';
+        let color = '#fff';
+        let bgColor = (lv % 2 === 0) ? 'rgba(255,255,255,0.02)' : 'transparent';
+
+        // 公式對齊 C# 邏輯
+        if (lv < 15) {
+            xp = 50;
+            title = '🐣 初心者';
+            color = '#00d4ff';
+        } else if (lv < 50) {
+            xp = 500 + ((lv - 15 + 1) * 150);
+            title = '⚔️ 一轉職業';
+            color = '#7dff00';
+        } else if (lv < 100) {
+            xp = 4500 + ((lv - 50 + 1) * 250);
+            title = '🔥 二轉巔峰';
+            color = '#ff00ea';
+        } else {
+            xp = '---';
+            title = '👑 傳說英雄';
+            color = '#ffd700';
+            bgColor = 'rgba(255, 215, 0, 0.1)';
+        }
+
+        const displayXp = (typeof xp === 'number') ? xp.toLocaleString() : xp;
+
+        rows += `<tr style="background: ${bgColor}; border-bottom: 1px solid #333;">
+            <td style="padding: 8px; border: 1px solid #444;">Lv.${lv}</td>
+            <td style="padding: 8px; border: 1px solid #444; color: ${color}">${title}</td>
+            <td style="padding: 8px; border: 1px solid #444;">${displayXp}</td>
+        </tr>`;
+    }
+    tableBody.innerHTML = rows;
+})();
+</script>
             
             <div style="margin-top: 15px; font-size: 0.9em; color: #ccc; border-left: 3px solid #ffd700; padding-left: 10px;">
                 <strong>💡 公式小筆記：</strong><br>
