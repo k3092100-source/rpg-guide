@@ -185,6 +185,44 @@
             .enhanced-result-box { padding: 20px; }
             .enhanced-status-grid { grid-template-columns: 1fr; }
         }
+        /* 💡 Q&A 專區專屬樣式 */
+        .qa-container { margin-top: 30px; }
+        .qa-item { 
+            background: rgba(255, 255, 255, 0.03); 
+            border: 1px solid #444; 
+            border-radius: 10px; 
+            margin-bottom: 10px; 
+            overflow: hidden; 
+            transition: all 0.3s ease;
+        }
+        .qa-question { 
+            padding: 15px 20px; 
+            cursor: pointer; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            font-weight: bold;
+            color: var(--gold);
+        }
+        .qa-question:hover { background: rgba(255, 215, 0, 0.05); }
+        .qa-answer { 
+            padding: 0 20px; 
+            max-height: 0; 
+            overflow: hidden; 
+            transition: max-height 0.3s ease-out, padding 0.3s ease;
+            color: #ccc;
+            font-size: 0.95em;
+            border-top: 1px solid transparent;
+        }
+        .qa-item.active { border-color: var(--neon-blue); background: rgba(0, 212, 255, 0.03); }
+        .qa-item.active .qa-answer { 
+            max-height: 200px; 
+            padding: 15px 20px; 
+            border-top: 1px solid rgba(0, 212, 255, 0.2); 
+        }
+        .qa-question::after { content: '▼'; font-size: 0.7em; transition: transform 0.3s; }
+        .qa-item.active .qa-question::after { transform: rotate(180deg); }
+        
     </style>
 </head>
 <body>
@@ -266,7 +304,25 @@
                 <div class="cmd-item"><div class="cmd-name">!換稱號 [稱號名稱]</div><div class="cmd-desc">從你擁有的稱號清單中，挑選一個最帥的掛在名字前面。</div></div>
             </div>
         </div>
-
+        <h2>💡 勇者新手村 Q&A</h2>
+        <div class="qa-container">
+            <div class="qa-item">
+                <div class="qa-question" onclick="toggleQA(this)">1. 為什麼我在官網查不到我的資料？</div>
+                <div class="qa-answer">因為數據是分開儲存的喔！請在實況聊天室輸入過一次 <span class="highlight">!RPG</span>，系統才會將你的本機資料同步到雲端數據庫。</div>
+            </div>
+            <div class="qa-item">
+                <div class="qa-question" onclick="toggleQA(this)">2. 為什麼我掛台很久等級都沒變？</div>
+                <div class="qa-answer">掛台經驗值是「默默領取」的。為了效能，系統不會主動更新雲端。你需要 <span class="highlight">在聊天室講話</span> 或輸入 <span class="highlight">!RPG</span>，數據才會一次同步到最新等級。</div>
+            </div>
+            <div class="qa-item">
+                <div class="qa-question" onclick="toggleQA(this)">3. 職業效果什麼時候會發動？</div>
+                <div class="qa-answer">職業加成效果（如刺客爆擊、商人加倍）<span class="highlight">僅在魔王戰期間</span>發動。平時掛台與聊天獲得的經驗值是全職業統一的。</div>
+            </div>
+            <div class="qa-item">
+                <div class="qa-question" onclick="toggleQA(this)">4. 被魔王震飛禁言會影響經驗值嗎？</div>
+                <div class="qa-answer">不會！禁言只是魔王的惡作劇，你依然可以領取掛台經驗值。累積被震飛 20 次還能解鎖神祕非洲人稱號！</div>
+            </div>
+        </div>
         <h2>🏆 年度霸權即時榜</h2>
         <div class="rule-box" style="background: rgba(0,0,0,0.3);">
             <div class="live-status-bar">
@@ -442,6 +498,10 @@
     }
     fetchRpgData();
     setInterval(fetchRpgData, 30000);
+    function toggleQA(element) {
+        const item = element.parentElement;
+        item.classList.toggle('active');
+    }
 </script>
 </body>
 </html>
