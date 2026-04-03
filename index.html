@@ -222,7 +222,45 @@
         }
         .qa-question::after { content: '▼'; font-size: 0.7em; transition: transform 0.3s; }
         .qa-item.active .qa-question::after { transform: rotate(180deg); }
-        
+        /* 📣 新消息公告欄樣式 */
+        .news-banner {
+            background: linear-gradient(90deg, rgba(255, 0, 255, 0.1), rgba(0, 212, 255, 0.1));
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+        .news-tag {
+            background: var(--neon-pink);
+            color: white;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-right: 15px;
+            white-space: nowrap;
+            box-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+        }
+        .news-content {
+            color: #fff;
+            font-size: 0.95em;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .news-banner::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: 0.5s;
+            animation: sweep 3s infinite;
+        }
+        @keyframes sweep { 0% { left: -100%; } 100% { left: 100%; } }
     </style>
 </head>
 <body>
@@ -230,7 +268,17 @@
         <div class="header-info">◤ 第一賽季：英雄崛起 ◢ &nbsp; | &nbsp; 製作人：萌萌吃吃</div>
         <h1>🏆 《要拚實況RPG》</h1>
         <div style="text-align: center; color: #ff00ff; font-size: 1.3em; margin-bottom: 40px; font-weight: bold;">～ 5月正式開服，12/31 結算年度總榜送驚喜大獎！ ～</div>
-
+    <div class="news-banner">
+            <div class="news-tag">UPCOMING EVENTS</div>
+            <div class="news-content">
+                📅 <span class="highlight">天堂M 燃燒加倍預告：</span><br>
+                🔥 <span class="pink-light">4/2 (四) 20:00 - 21:00</span> 一小時加倍！<br>
+                🔥 <span class="pink-light">4/6 (一) 21:00 - 22:00</span> 一小時加倍！<br>
+                🔥 <span class="pink-light">4/7 (二) 20:00 - 21:00</span> 一小時加倍！<br>
+                <span style="font-size: 0.85em; color: #aaa;">* 請各位勇士準時上線，把握最速衝等機會！ *</span>
+            </div>
+        </div>
+        
         <h2>遊戲說明</h2>
         <div class="rule-box">
             
@@ -244,7 +292,7 @@
             <p>支持吃吃實況頻道還能力拼年末<span class="highlight">實體獎品</span>，快來跟我一起拚！</p>
         </div>
 
-       <h2>👹 萬血魔王：打王拼稱號</h2>
+       <h2>👹 萬血魔王</h2>
 
         <div class="rule-box">
 
@@ -260,7 +308,7 @@
 
         </div>
 
-        <h2>🎭 職業體系 (Lv.15 一轉 / Lv.50 二轉) 注意！打王時才有職業效果</h2>
+        <h2>🎭 職業體系 (Lv.15 一轉 / Lv.50 二轉)</h2>
         <div class="job-grid">
             <div class="job-box warrior">
                 <div class="job-title">⚔️ 戰士系 <span class="job-tag" style="background: var(--warrior-red);">穩定增傷</span></div>
@@ -321,6 +369,10 @@
             <div class="qa-item">
                 <div class="qa-question" onclick="toggleQA(this)">4. 被魔王震飛禁言會影響經驗值嗎？</div>
                 <div class="qa-answer">不會！禁言只是魔王的惡作劇，你依然可以領取掛台經驗值。累積被震飛 20 次還能解鎖神祕非洲人稱號！</div>
+            </div>
+            <div class="qa-item">
+                <div class="qa-question" onclick="toggleQA(this)">2. 為什麼我掛台很久等級都沒變？</div>
+                <div class="qa-answer">掛台經驗值是「默默領取」的。為了效能，系統不會主動更新雲端。你需要 <span class="highlight">在聊天室講話</span> 或輸入 <span class="highlight">!RPG</span>，數據才會一次同步到最新等級。</div>
             </div>
         </div>
         <h2>🏆 年度霸權即時榜</h2>
