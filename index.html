@@ -389,7 +389,7 @@
                 <div class="qa-question" onclick="toggleQA(this)">6. 被魔王震飛禁言會影響經驗值嗎？</div>
                 <div class="qa-answer">不會！禁言只是魔王的惡作劇，你依然可以領取掛台經驗值。累積被震飛 20 次還能解鎖神祕非洲人稱號！</div>
             </div>
-        </div> <h2>🏆 年度霸權即時榜</h2>
+         <h2>🏆 年度霸權即時榜</h2>
         <div class="rule-box" style="background: rgba(0,0,0,0.3);">
             <div class="live-status-bar">
                 <div class="status-item">
@@ -538,27 +538,33 @@
             if (data.boss && data.boss.targetTs > 0) {
                 if (bossTimerInterval) clearInterval(bossTimerInterval);
                 
-                bossTimerInterval = setInterval(() => {
+           bossTimerInterval = setInterval(() => {
                     const now = new Date().getTime();
                     const distance = data.boss.targetTs - now;
                     
                     if (distance <= 0) { 
-                        // 歸零後的文字
                         bossDisplay.innerText = "魔王降臨中！"; 
                         clearInterval(bossTimerInterval); 
                     }
                     else {
-                        const m = Math.floor(distance / 60000);
+                        // 🌟 修正這裡：增加小時計算
+                        const h = Math.floor(distance / 3600000); 
+                        const m = Math.floor((distance % 3600000) / 60000);
                         const s = Math.floor((distance % 60000) / 1000);
-                        const timeStr = `${m}:${s.toString().padStart(2,'0')}`;
                         
-                        // 🌟 核心邏輯：判斷 B3 (active) 狀態
-                        // 妳的預約腳本設 bossActive 為 2，正式現身則為其他數字
+                        // 🌟 組合時間字串
+                        let timeStr = "";
+                        if (h > 0) {
+                            timeStr = `${h}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+                        } else {
+                            timeStr = `${m}:${s.toString().padStart(2,'0')}`;
+                        }
+                        
                         if (data.boss.active === 2) {
-                            bossDisplay.style.color = "#00d4ff"; // 預報用藍色
+                            bossDisplay.style.color = "#00d4ff";
                             bossDisplay.innerText = `⏳ 魔王預告: ${timeStr}`;
                         } else {
-                            bossDisplay.style.color = "#ff4d4d"; // 現身用紅色
+                            bossDisplay.style.color = "#ff4d4d";
                             bossDisplay.innerText = `👹 魔王現身: ${timeStr}`;
                         }
                     }
