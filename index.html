@@ -537,17 +537,34 @@
             const bossDisplay = document.getElementById('boss-display');
             if (data.boss && data.boss.targetTs > 0) {
                 if (bossTimerInterval) clearInterval(bossTimerInterval);
-                bossDisplay.style.color = "#ff4d4d";
+                
                 bossTimerInterval = setInterval(() => {
-                    const distance = data.boss.targetTs - new Date().getTime();
-                    if (distance <= 0) { bossDisplay.innerText = "魔王降臨中！"; clearInterval(bossTimerInterval); }
+                    const now = new Date().getTime();
+                    const distance = data.boss.targetTs - now;
+                    
+                    if (distance <= 0) { 
+                        // 歸零後的文字
+                        bossDisplay.innerText = "魔王降臨中！"; 
+                        clearInterval(bossTimerInterval); 
+                    }
                     else {
-                        const m = Math.floor((distance % 3600000) / 60000);
+                        const m = Math.floor(distance / 60000);
                         const s = Math.floor((distance % 60000) / 1000);
-                        bossDisplay.innerText = `👹 魔王 ⏳ ${m}:${s.toString().padStart(2,'0')}`;
+                        const timeStr = `${m}:${s.toString().padStart(2,'0')}`;
+                        
+                        // 🌟 核心邏輯：判斷 B3 (active) 狀態
+                        // 妳的預約腳本設 bossActive 為 2，正式現身則為其他數字
+                        if (data.boss.active === 2) {
+                            bossDisplay.style.color = "#00d4ff"; // 預報用藍色
+                            bossDisplay.innerText = `⏳ 魔王預告: ${timeStr}`;
+                        } else {
+                            bossDisplay.style.color = "#ff4d4d"; // 現身用紅色
+                            bossDisplay.innerText = `👹 魔王現身: ${timeStr}`;
+                        }
                     }
                 }, 1000);
             } else {
+                // 這裡保留妳要的「目前無魔王蹤跡」
                 if (bossTimerInterval) clearInterval(bossTimerInterval);
                 bossDisplay.innerText = "💤 目前無魔王蹤跡";
                 bossDisplay.style.color = "#888"; 
