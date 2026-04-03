@@ -216,7 +216,7 @@
         }
         .qa-item.active { border-color: var(--neon-blue); background: rgba(0, 212, 255, 0.03); }
         .qa-item.active .qa-answer { 
-            max-height: none; 
+            max-height: 200px; 
             padding: 15px 20px; 
             border-top: 1px solid rgba(0, 212, 255, 0.2); 
         }
@@ -297,7 +297,7 @@
 
             <ul style="list-style-type: disc; padding-left: 20px;">
 
-                <li style="margin-bottom: 15px;"><span class="highlight">如何打王：</span> 保持平常聊天即可對王造成傷害並獲取同等經驗 ，請注意<span style="color: #ff3333; font-weight: bold;">禁止洗頻</span>！</li>
+                <li style="margin-bottom: 15px;"><span class="highlight">魔王機制說明：</span> 不定時會有魔王出沒倒數，聊天室發言就能痛扁魔王，<span class="highlight">攻擊力=獲得經驗值</span>！是衝等拿稀有稱號的好時機</li>
                 <li style="margin-bottom: 15px;"><span class="highlight">魔王攻擊：</span> 魔王戰期間隨機攻擊，中招者將被 "禁言"，如 <span class="highlight">累積震飛 20 次</span> 可獲得 <span class="pink-light">《認證非洲人》</span> 稀有稱號！</li>
                 <li style="margin-bottom: 15px;"><span class="highlight">全服共享紅包：</span> 魔王倒下後，全服玩家 (包含掛台) 可獲得 <span class="highlight">200 XP</span>！</li>
                 <li style="margin-bottom: 15px;"><span class="highlight">尾刀霸主：</span> 給予魔王最後一擊的勇者，直接額外領取 <span class="highlight">500 XP</span>！</li>
@@ -349,7 +349,7 @@
                 <div class="cmd-item"><div class="cmd-name">!轉職 [職業名稱]</div><div class="cmd-desc">當等級達到 <span class="highlight">Lv.15</span> 時，可輸入此指令進行轉職（例如：!轉職 戰士）。</div></div>
                 <div class="cmd-item"><div class="cmd-name">!二轉 [職業名稱]</div><div class="cmd-desc">當等級達到 <span class="highlight">Lv.50</span> 時，可輸入此指令進行二轉，不用輸入職業名稱。</div></div>
                 <div class="cmd-item"><div class="cmd-name">!我的稱號</div><div class="cmd-desc">列出你目前所擁有的所有稀有稱號。讓你確認哪些永久榮耀已經入袋！</div></div>
-                <div class="cmd-item"><div class="cmd-name">!換稱號 [對應數字]</div><div class="cmd-desc">從你擁有的稱號清單中，挑選一個最帥的掛在名字前面。</div></div>
+                <div class="cmd-item"><div class="cmd-name">!換稱號 [稱號名稱]</div><div class="cmd-desc">從你擁有的稱號清單中，挑選一個最帥的掛在名字前面。</div></div>
             </div>
             
         </div>
@@ -364,7 +364,7 @@
 
             <div class="qa-item">
                 <div class="qa-question" onclick="toggleQA(this)">2. 為什麼我在官網查不到我的資料？</div>
-                <div class="qa-answer">因為數據是分開儲存的喔！請在 <span class="highlight">聊天室講話</span>，稍後系統才會將你的本機資料同步到雲端數據庫。</div>
+                <div class="qa-answer">因為數據是分開儲存的喔！請在 <span class="highlight">在聊天室講話</span>，稍後系統才會將你的本機資料同步到雲端數據庫。</div>
             </div>
 
             <div class="qa-item">
@@ -396,78 +396,31 @@
         <div class="qa-item">
             <div class="qa-question" onclick="toggleQA(this)">7. 魔王什麼時候會出現？</div>
             <div class="qa-answer">
-                魔王通常由吃吃手動開啟。請密切關注官網、實況上的 <span class="highlight">「魔王降臨倒數」</span>，時間一到，請各位勇者準備好武器在聊天室集合！
-          </div>
-<div class="qa-item" style="border: 1px solid #ffd700; background: rgba(0, 0, 0, 0.6); margin-bottom: 20px;">
-    <div class="qa-question" onclick="toggleQA(this)" style="color: #ffd700; font-weight: bold; display: flex; justify-content: space-between; align-items: center;">
-        <span>📜 點我展開：勇者 1-100 級全等級經驗表</span>
-        <span style="font-size: 0.8em; color: #aaa;">點擊展開 / 收合</span>
-    </div>
-    <div class="qa-answer">
-        <div style="max-height: 450px; overflow-y: auto; background: rgba(0,0,0,0.5); border-radius: 8px;">
-            <table style="width: 100%; border-collapse: collapse; text-align: center; color: #fff; font-family: 'Courier New', monospace;">
-                <thead style="position: sticky; top: 0; background: #ffd700; color: #000; z-index: 10;">
-                    <tr>
-                        <th style="padding: 10px; border: 1px solid #444;">等級</th>
-                        <th style="padding: 10px; border: 1px solid #444;">帥氣頭銜</th>
-                        <th style="padding: 10px; border: 1px solid #444;">所需經驗值</th>
-                    </tr>
-                </thead>
-                <tbody id="dynamic-exp-table">
-                    </tbody>
-            </table>
+                魔王通常由村長（欣語）手動開啟或預約。請密切關注官網上方的 「魔王降臨倒數」，時間一到，請各位勇者準備好武器在聊天室集合！
+            </div>
+        </div> </div> <h2>📜 冒險者等級與榮耀頭銜</h2>
+<div class="rule-box" style="background: rgba(255, 215, 0, 0.05); border: 1px solid var(--gold);">
+    <div style="max-height: 500px; overflow-y: auto; border-radius: 8px; background: rgba(0,0,0,0.3);">
+        <table style="width: 100%; border-collapse: collapse; text-align: center; color: #fff;">
+            <thead style="position: sticky; top: 0; background: var(--gold); color: #000; z-index: 10;">
+                <tr>
+                    <th style="padding: 12px; border: 1px solid #444;">等級</th>
+                    <th style="padding: 12px; border: 1px solid #444;">尊榮頭銜</th>
+                    <th style="padding: 12px; border: 1px solid #444;">所需 EXP</th>
+                </tr>
+            </thead>
+            <tbody id="dynamic-exp-table">
+</tbody>
+        </table>
+    </div> <div style="background: rgba(0,0,0,0.4); padding: 15px; border-radius: 8px; margin-top: 20px;">
+        <div style="font-size: 0.9em; color: #ccc; border-left: 3px solid #ffd700; padding-left: 10px;">
+            <strong>💡 公式小筆記：</strong><br>
+            1. 經驗值公式：等級越高，升級所需數值會依公式遞增。<br>
+            2. 燃燒模式：獲取經驗速度為平常的 <span style="color: #ff4d4d; font-weight: bold;">10 倍</span>！<br>
+            3. 魔王戰：擊殺魔王可獲得大量額外經驗與限量稱號。
         </div>
-        <p style="font-size: 0.8em; color: #aaa; margin-top: 10px; padding-left: 10px;">
-            💡 小撇步：高等級經驗值跳漲較快，建議利用「魔王戰」或「燃燒模式」快速升級！
-        </p>
-    </div>
-</div>
-
-<script>
-// 🌟 欣語村長的 1-100 級「動態頭銜」生成器
-(function() {
-    const tableBody = document.getElementById('dynamic-exp-table');
-    let rows = '';
-
-    for (let lv = 1; lv <= 100; lv++) {
-        let xp = (lv < 15) ? 50 : (lv < 50) ? 500 + ((lv - 15 + 1) * 150) : 4500 + ((lv - 50 + 1) * 250);
-        
-        // 🏆 根據妳給的對照表來定義頭銜
-        let rankTitle = "";
-        let color = "#fff";
-
-        if (lv >= 100) { rankTitle = "神話·百級巔峰"; color = "#ffd700"; } // 金色
-        else if (lv >= 90) { rankTitle = "傳奇英雄"; color = "#ff4d4d"; }    // 紅色
-        else if (lv >= 75) { rankTitle = "史詩先鋒"; color = "#ff00ea"; }    // 粉色
-        else if (lv >= 60) { rankTitle = "超凡大師"; color = "#a64dff"; }    // 紫色
-        else if (lv >= 50) { rankTitle = "領域強者"; color = "#00d4ff"; }    // 藍色
-        else if (lv >= 35) { rankTitle = "百戰勇者"; color = "#7dff00"; }    // 綠色
-        else if (lv >= 25) { rankTitle = "資深探索者"; color = "#fff"; }
-        else if (lv >= 15) { rankTitle = "精英冒險者"; color = "#fff"; }
-        else if (lv >= 5)  { rankTitle = "冒險初心者"; color = "#eee"; }
-        else { rankTitle = "初來乍到"; color = "#aaa"; }
-
-        const displayXp = (lv === 100) ? '---' : xp.toLocaleString();
-
-        rows += `<tr style="border-bottom: 1px solid #333;">
-            <td style="padding: 8px; border: 1px solid #444;">Lv.${lv}</td>
-            <td style="padding: 8px; border: 1px solid #444; color: ${color}; font-weight: bold;">${rankTitle}</td>
-            <td style="padding: 8px; border: 1px solid #444;">${displayXp}</td>
-        </tr>`;
-    }
-    tableBody.innerHTML = rows;
-})();
-</script>
-            
-            <div style="margin-top: 15px; font-size: 0.9em; color: #ccc; border-left: 3px solid #ffd700; padding-left: 10px;">
-                <strong>💡 公式小筆記：</strong><br>
-                1. 經驗值公式：等級越高，升級所需數值會依公式遞增。<br>
-                2. 燃燒模式：獲取經驗速度為平常的 <span style="color: #ff4d4d; font-weight: bold;">10 倍</span>！<br>
-                3. 魔王戰：擊殺魔王可獲得大量額外經驗與限量稱號。
-            </div> </div> </div>         
-    
-    </div> <h2>🏆 年度霸權即時榜</h2>
-        <div class="rule-box" style="background: rgba(0,0,0,0.3);">
+    </div> </div> <h2>🏆 年度霸權即時榜</h2>
+<div class="rule-box" style="background: rgba(0,0,0,0.3);">
             <div class="live-status-bar">
                 <div class="status-item">
                     <div class="status-label">👹 魔王預報</div>
@@ -668,6 +621,41 @@ if (h > 0) {
         const item = element.parentElement;
         item.classList.toggle('active');
     }
+
+    // 🌟 欣語村長的 1-100 級「動態頭銜」自動生成
+(function() {
+    const tableBody = document.getElementById('dynamic-exp-table');
+    if (!tableBody) return;
+    let rows = '';
+
+    for (let lv = 1; lv <= 100; lv++) {
+        let xp = (lv < 15) ? 50 : (lv < 50) ? 500 + ((lv - 15 + 1) * 150) : 4500 + ((lv - 50 + 1) * 250);
+        
+        let rankTitle = "";
+        let color = "#fff";
+
+        // 對齊妳給的頭銜表
+        if (lv >= 100) { rankTitle = "神話·百級巔峰"; color = "#ffd700"; }
+        else if (lv >= 90) { rankTitle = "傳奇英雄"; color = "#ff4d4d"; }
+        else if (lv >= 75) { rankTitle = "史詩先鋒"; color = "#ff00ea"; }
+        else if (lv >= 60) { rankTitle = "超凡大師"; color = "#a64dff"; }
+        else if (lv >= 50) { rankTitle = "領域強者"; color = "#00d4ff"; }
+        else if (lv >= 35) { rankTitle = "百戰勇者"; color = "#7dff00"; }
+        else if (lv >= 25) { rankTitle = "資深探索者"; color = "#fff"; }
+        else if (lv >= 15) { rankTitle = "精英冒險者"; color = "#fff"; }
+        else if (lv >= 5)  { rankTitle = "冒險初心者"; color = "#eee"; }
+        else { rankTitle = "初來乍到"; color = "#aaa"; }
+
+        const displayXp = (lv === 100) ? '---' : xp.toLocaleString();
+
+        rows += `<tr style="border-bottom: 1px solid #333;">
+            <td style="padding: 8px; border: 1px solid #444;">Lv.${lv}</td>
+            <td style="padding: 8px; border: 1px solid #444; color: ${color}; font-weight: bold;">${rankTitle}</td>
+            <td style="padding: 8px; border: 1px solid #444;">${displayXp}</td>
+        </tr>`;
+    }
+    tableBody.innerHTML = rows;
+})();
 </script>
 </body>
 </html>
