@@ -164,7 +164,7 @@
     z-index: 5; /* 確保在最上層 */
     pointer-events: none;
 }
-        /* 📱 手機版專屬優化補丁 */
+ /* 📱 手機版專屬優化補丁 */
         @media screen and (max-width: 600px) {
             .container { padding: 15px; margin: 10px auto; width: 95%; }
             h1 { font-size: 2em; }
@@ -176,21 +176,30 @@
                 gap: 5px; /* 設定小小的間距 */
             }
             .enhanced-hero-name { font-size: 1.6em; }
-            /* 讓稱號字體稍微縮小一點點，更有層次感 */
             .enhanced-pink { font-size: 0.8em; } 
 
+            /* 🛒 商店補丁：讓卡片在手機上自動單欄排列，不爆出螢幕 */
+            .job-grid { 
+                grid-template-columns: 1fr !important; 
+                gap: 15px; 
+            }
+            .job-box { padding: 20px; }
+            .job-title { font-size: 1.3em; }
+
+            /* 📊 表格補丁：讓排行榜可以左右滑動，不會擠成一坨 */
             .rank-table { 
-                table-layout: auto !important; 
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
                 font-size: 0.75em; 
             }
-            .rank-table th, .rank-table td { padding: 10px 4px; }
-            .rank-table th:nth-child(1), .rank-table td:nth-child(1) { width: 35px !important; }
-            .rank-table th:nth-child(2), .rank-table td:nth-child(2) { width: 55px !important; }
-            .rank-table th:nth-child(3), .rank-table td:nth-child(3) { width: 45px !important; }
+            .rank-table th, .rank-table td { padding: 10px 8px; }
             
             .enhanced-result-box { padding: 20px; }
             .enhanced-status-grid { grid-template-columns: 1fr; }
+            .xp-progress-text { font-size: 9px; }
         }
+
         /* 💡 Q&A 專區專屬樣式 */
         .qa-container { margin-top: 30px; }
         .qa-item { 
@@ -228,6 +237,7 @@
         }
         .qa-question::after { content: '▼'; font-size: 0.7em; transition: transform 0.3s; }
         .qa-item.active .qa-question::after { transform: rotate(180deg); }
+
         /* 📣 新消息公告欄樣式 */
         .news-banner {
             background: linear-gradient(90deg, rgba(255, 0, 255, 0.1), rgba(0, 212, 255, 0.1));
